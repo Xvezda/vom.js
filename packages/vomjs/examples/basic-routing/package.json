@@ -1,0 +1,15 @@
+{
+  "name": "basic-routing",
+  "version": "0.0.0",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "author": {
+    "name": "Xvezda",
+    "email": "xvezda@naver.com",
+    "url": "https://xvezda.com/"
+  },
+  "private": true
+}

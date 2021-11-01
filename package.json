@@ -1,0 +1,21 @@
+{
+  "name": "@vomjs/monorepo",
+  "author": {
+    "name": "Xvezda",
+    "email": "xvezda@naver.com",
+    "url": "https://xvezda.com/"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "yarn workspace vomjs build"
+  },
+  "devDependencies": {
+    "gh-pages": "^3.2.3",
+    "lerna": "^4.0.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "packages/**/examples/*"
+  ],
+  "private": true
+}

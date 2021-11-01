@@ -1,0 +1,26 @@
+{
+  "name": "vomjs",
+  "version": "0.0.0",
+  "description": "컴포넌트 기반 웹 어플리케이션 개발을 위한 React-like 프레임워크",
+  "main": "dist/vom.js",
+  "module": "src/index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "webpack --node-env production",
+    "build:dev": "webpack --node-env development"
+  },
+  "author": {
+    "name": "Xvezda",
+    "email": "xvezda@naver.com",
+    "url": "https://xvezda.com/"
+  },
+  "dependencies": {
+    "@vomjs/store": "^0.0.0",
+    "@vomjs/tools": "^0.0.0"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.2.3",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.9.1"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "tic-tac-toe",
+  "version": "0.0.0",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "private": true,
+  "devDependencies": {
+    "parcel": "^2.0.0-rc.0"
+  },
+  "dependencies": {
+    "core-js": "^3.18.1",
+    "vomjs": "^0.0.0"
+  }
+}
