@@ -1,6 +1,6 @@
 {
   "name": "basic-routing",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
