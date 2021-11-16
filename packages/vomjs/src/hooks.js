@@ -9,6 +9,7 @@ import {
   clearArray,
 } from './helpers.js';
 
+
 function hookIdx(index = 0, action) {
   switch (action.type) {
     case 'INCREMENT':
@@ -146,10 +147,11 @@ export function useRef(initValue) {
     });
   } else {
     ref = refs.getState()[currentIdx];
-    refHash = ref.$ref.hash;
+    refHash = `${ref}`;
   }
   nextTick(() => {
-    ref.current = document.querySelector(`[data-ref="${refHash}"]`);
+    const selected = document.querySelector(`[data-ref="${refHash}"]`);
+    ref.current = selected;
   });
   return ref;
 }
@@ -164,7 +166,7 @@ export function useEventListener(ref, eventName, handler) {
 export function useDelegation(eventName, handler) {
   const ref = useRef();
   const delegate = (event) => {
-    const selector = `[data-delegate="${ref.current.dataset.ref}"`;
+    const selector = `[data-delegate="${ref}"`;
     const target = event.target.closest(selector);
     if (!target) {
       return;
