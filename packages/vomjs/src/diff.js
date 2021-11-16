@@ -27,7 +27,7 @@ export function patchNode(parentNode, srcNode, dstNode) {
     parentNode.appendChild(srcNode);
     return;
   }
-  if (srcNode.nodeType !== dstNode.NodeType) {
+  if (srcNode.nodeType !== dstNode.nodeType) {
     parentNode.replaceChild(srcNode, dstNode);
     return;
   }
