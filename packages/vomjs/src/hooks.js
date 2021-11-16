@@ -78,13 +78,14 @@ export function useState(initState) {
     state: evaluate(initState),
   });
 
+  const getState = () => states.getState()[currentIdx];
   return [
-    states.getState()[currentIdx],
+    getState(),
     function setState(newState) {
       states.dispatch({
         type: 'SET_STATE',
         index: currentIdx,
-        state: evaluate(newState, states.getState()[currentIdx]),
+        state: evaluate(newState, getState()),
       });
       dispatcher.dispatch({type: '@@vomjs/RENDER'});
     },

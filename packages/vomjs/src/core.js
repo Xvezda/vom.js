@@ -14,11 +14,12 @@ function renderTo(element, render) {
 }
 
 export function render(component, parent) {
+  const bindedRenderer = renderTo.bind(null, parent, () => html`${component}`);
   window.addEventListener('DOMContentLoaded', () => {
-    renderTo(parent, () => html`${component}`);
+    bindedRenderer();
     const rerender = payload => {
       if (payload.type === '@@vomjs/RENDER') {
-        renderTo(parent, () => html`${component}`);
+        bindedRenderer();
       }
     };
     dispatcher.register(throttle(rerender));
