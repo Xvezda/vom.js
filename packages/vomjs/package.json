@@ -1,6 +1,6 @@
 {
   "name": "vomjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "컴포넌트 기반 웹 어플리케이션 개발을 위한 React-like 프레임워크",
   "main": "dist/vom.js",
   "module": "src/index.js",
@@ -15,8 +15,8 @@
     "url": "https://xvezda.com/"
   },
   "dependencies": {
-    "@vomjs/store": "^0.0.1",
-    "@vomjs/tools": "^0.0.1"
+    "@vomjs/store": "^0.0.2",
+    "@vomjs/tools": "^0.0.2"
   },
   "devDependencies": {
     "babel-loader": "^8.2.3",
