@@ -15,10 +15,6 @@ export function isArrayEquals(a, b, key=Object.is) {
   return a && b && a.length === b.length && a.every((v, i) => key(v, b[i]));
 }
 
-export function isFirstCall(hookStore, idx) {
-  return typeof hookStore[idx] === 'undefined';
-}
-
 export function getHash() {
   return Array(2).fill().map(() => Math.random().toString(36).substring(2)).join('');
 }

@@ -4,17 +4,6 @@ import { escapeEntities } from './helpers.js';
 
 export const dispatcher = new Dispatcher;
 
-function getComponentName(func) {
-  const match = /[A-Z][A-Za-z0-9_]*/.exec(
-    func.displayName ||
-    func.name
-  );
-  if (match) {
-    return match[0];
-  }
-  return null;
-}
-
 const exprFunctions = new Set();
 export const getLatestFunction = () => [...exprFunctions].pop();
 function exprToString(expr) {

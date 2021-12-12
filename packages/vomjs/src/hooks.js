@@ -5,7 +5,6 @@ import {
 } from './shared.js';
 import {
   isArrayEquals,
-  isFirstCall,
   evaluate,
   getHash,
   nextTick,
