@@ -7,7 +7,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "prepublish": "yarn build",
+    "prepublishOnly": "yarn build",
     "build": "yarn workspace vomjs build",
     "test": "jest --verbose --cache"
   },
