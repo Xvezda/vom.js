@@ -11,5 +11,8 @@
     "email": "xvezda@naver.com",
     "url": "https://xvezda.com/"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "parcel": "^2.0.1"
+  }
 }
