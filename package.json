@@ -18,6 +18,9 @@
     "jest": "^27.3.1",
     "lerna": "^4.0.0"
   },
+  "resolutions": {
+    "**/json-schema": "^0.4.0"
+  },
   "workspaces": [
     "packages/*",
     "examples/*"
