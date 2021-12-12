@@ -88,8 +88,11 @@ export function useRef(initValue) {
 
 export function useEventListener(ref, eventName, handler) {
   useEffect(() => {
-    ref.current?.addEventListener(eventName, handler);
-    return () => ref.current?.removeEventListener(eventName, handler);
+    if (!ref.current)
+      return;
+
+    ref.current.addEventListener(eventName, handler);
+    return () => ref.current.removeEventListener(eventName, handler);
   });
 }
 
