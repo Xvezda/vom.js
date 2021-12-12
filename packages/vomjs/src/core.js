@@ -16,7 +16,7 @@ function renderTo(element, render) {
 
 export function render(component, parent) {
   const bindedRenderer = renderTo.bind(null, parent, () => html`${component}`);
-  window.addEventListener('DOMContentLoaded', () => {
+  const initialize = () => {
     bindedRenderer();
     const rerender = payload => {
       if (payload.type === ActionTypes.RENDER) {
@@ -24,5 +24,11 @@ export function render(component, parent) {
       }
     };
     dispatcher.register(throttle(rerender));
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    initialize();
+  }
 }
