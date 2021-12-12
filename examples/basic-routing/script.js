@@ -87,7 +87,7 @@ function App() {
 
   useEffect(() => {
     window.onpopstate = function (event) {
-      const state = event.state ?? {page: '/'};
+      const state = event.state || {page: '/'};
       setPage(state.page);
     };
   }, []);
