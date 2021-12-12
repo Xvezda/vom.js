@@ -13,9 +13,6 @@ import {
 
 
 const states = new Map();
-const deps = new Map();
-const refs = new Map();
-
 export function useState(initState) {
   const latest = getLatestFunction();
 
@@ -32,6 +29,7 @@ export function useState(initState) {
   ];
 }
 
+
 const cleanups = [];
 dispatcher.register(payload => {
   if (payload.type === '@@vomjs/RENDER') {
@@ -39,14 +37,15 @@ dispatcher.register(payload => {
     clearArray(cleanups);
   }
 });
+const deps = new Map();
+
 export function useEffect(didUpdate, stateDeps) {
   const latest = getLatestFunction();
   const didCalled = deps.has(latest);
   const needUpdate = didCalled || typeof stateDeps === 'undefined';
 
-  if (needUpdate && stateDeps) {
+  if (needUpdate && stateDeps)
     deps.set(latest, stateDeps);
-  }
 
   if (!needUpdate && isArrayEquals(deps.get(latest), stateDeps || []))
     return;
@@ -61,6 +60,8 @@ export function useEffect(didUpdate, stateDeps) {
   });
 }
 
+
+const refs = new Map();
 export function useRef(initValue) {
   const latest = getLatestFunction();
 
@@ -83,6 +84,7 @@ export function useRef(initValue) {
   return ref;
 }
 
+
 export function useEventListener(ref, eventName, handler) {
   useEffect(() => {
     ref.current?.addEventListener(eventName, handler);
@@ -90,14 +92,15 @@ export function useEventListener(ref, eventName, handler) {
   });
 }
 
+
 export function useDelegation(eventName, handler) {
   const ref = useRef();
   const delegate = (event) => {
     const selector = `[data-delegate="${ref}"`;
     const target = event.target.closest(selector);
-    if (!target) {
+    if (!target)
       return;
-    }
+
     handler(target, event);
   };
   useEventListener(ref, eventName, delegate);
