@@ -1,3 +1,4 @@
+import ActionTypes from './action-types.js';
 import { Template, dispatcher } from './shared.js';
 import { patchNodes } from './diff.js';
 
@@ -18,7 +19,7 @@ export function render(component, parent) {
   window.addEventListener('DOMContentLoaded', () => {
     bindedRenderer();
     const rerender = payload => {
-      if (payload.type === '@@vomjs/RENDER') {
+      if (payload.type === ActionTypes.RENDER) {
         bindedRenderer();
       }
     };

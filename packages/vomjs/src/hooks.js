@@ -1,3 +1,4 @@
+import ActionTypes from './action-types.js';
 import {
   Reference,
   dispatcher,
@@ -24,7 +25,7 @@ export function useState(initState) {
     states.get(latest),
     function setState(newState) {
       states.set(latest, callIfFunction(newState, [states.get(latest)]));
-      dispatcher.dispatch({type: '@@vomjs/RENDER'});
+      dispatcher.dispatch({type: ActionTypes.RENDER});
     }
   ];
 }
@@ -32,7 +33,7 @@ export function useState(initState) {
 
 const cleanups = [];
 dispatcher.register(payload => {
-  if (payload.type === '@@vomjs/RENDER') {
+  if (payload.type === ActionTypes.RENDER) {
     cleanups.forEach(cleanUp => cleanUp());
     clearArray(cleanups);
   }
