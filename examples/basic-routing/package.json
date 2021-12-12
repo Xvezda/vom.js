@@ -1,6 +1,6 @@
 {
   "name": "basic-routing",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.2",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "@vomjs/tools": "^0.0.2",
-    "vomjs": "^0.0.3-alpha.1"
+    "vomjs": "^0.0.3-alpha.2"
   }
 }
