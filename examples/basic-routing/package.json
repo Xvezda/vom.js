@@ -1,10 +1,9 @@
 {
   "name": "basic-routing",
   "version": "0.0.3-alpha.3",
-  "source": "index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build"
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
   },
   "author": {
     "name": "Xvezda",
@@ -13,7 +12,7 @@
   },
   "private": true,
   "devDependencies": {
-    "parcel": "^2.0.1"
+    "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
     "@vomjs/tools": "^0.0.2",
