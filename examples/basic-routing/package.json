@@ -1,6 +1,6 @@
 {
   "name": "basic-routing",
-  "version": "0.0.3-alpha.4",
+  "version": "0.0.3-alpha.5",
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html"

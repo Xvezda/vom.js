@@ -1,14 +1,14 @@
 {
   "name": "tic-tac-toe",
-  "version": "0.0.3-alpha.4",
+  "version": "0.0.3-alpha.5",
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html"
   },
   "private": true,
   "devDependencies": {
-    "parcel-bundler": "^1.12.5",
-    "core-js": "^3.18.1"
+    "core-js": "^3.18.1",
+    "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
     "vomjs": "^0.0.3-alpha.4"
