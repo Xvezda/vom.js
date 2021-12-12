@@ -5,7 +5,7 @@ import {
 } from './shared.js';
 import {
   isArrayEquals,
-  evaluate,
+  callIfFunction,
   getHash,
   nextTick,
   clearArray,
@@ -20,13 +20,13 @@ export function useState(initState) {
   const latest = getLatestFunction();
 
   if (!states.has(latest)) {
-    states.set(latest, evaluate(initState));
+    states.set(latest, callIfFunction(initState));
   }
 
   return [
     states.get(latest),
     function setState(newState) {
-      states.set(latest, evaluate(newState, states.get(latest)));
+      states.set(latest, callIfFunction(newState, [states.get(latest)]));
       dispatcher.dispatch({type: '@@vomjs/RENDER'});
     }
   ];

@@ -25,8 +25,8 @@ export function forEachAll(a, b, apply) {
   }
 }
 
-export function evaluate(value, ...args) {
-  return value instanceof Function ? value(...args) : value;
+export function callIfFunction(value, args) {
+  return value instanceof Function ? value(...args || []) : value;
 }
 
 const placeholder = document.createElement('div');
