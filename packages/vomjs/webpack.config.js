@@ -20,6 +20,9 @@ module.exports = {
         use: [
           {
             loader: 'babel-loader',
+            options: {
+              rootMode: 'upward'
+            }
           },
         ],
       },
