@@ -1,5 +1,8 @@
-import { createStore } from '@vomjs/store';
-import { Reference, dispatcher, latestComponent } from './shared.js';
+import {
+  Reference,
+  dispatcher,
+  getLatestFunction,
+} from './shared.js';
 import {
   isArrayEquals,
   isFirstCall,
@@ -10,144 +13,69 @@ import {
 } from './helpers.js';
 
 
-function hookIdx(index = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return index + 1;
-    case 'RESET':
-      return 0;
-    default:
-      return index;
-  }
-}
+const states = new Map();
+const deps = new Map();
+const refs = new Map();
 
-function hookState(state = [], action) {
-  switch (action.type) {
-    case 'SET_STATE_IF_EMPTY':
-      if (typeof state[action.index] !== 'undefined') {
-        return state.slice();
-      }
-      // fallthrough
-    case 'SET_STATE':
-      return state
-        .slice(0, action.index)
-        .concat(Array.isArray(action.state)
-          ? [action.state.slice()]
-          : action.state)
-        .concat(state.slice(action.index + 1));
-    default:
-      return state;
-  }
-}
-
-const stateIdx = createStore(hookIdx);
-const states = createStore(hookState);
-
-const depIdx = createStore(hookIdx);
-const deps = createStore(hookState);
-
-const refIdx = createStore(hookIdx);
-const refs = createStore(hookState);
-
-const prevCleanUps = [];
-dispatcher.register(payload => {
-  if (payload.type === '@@vomjs/RENDER') {
-    prevCleanUps.forEach(cleanUp => cleanUp());
-    clearArray(prevCleanUps);
-
-    stateIdx.dispatch({type: 'RESET'});
-    depIdx.dispatch({type: 'RESET'});
-    refIdx.dispatch({type: 'RESET'});
-  }
-});
-
-const components = [];
 export function useState(initState) {
-  const currentIdx = stateIdx.getState();
-  stateIdx.dispatch({type: 'INCREMENT'});
+  const latest = getLatestFunction();
 
-  let actionType;
-  if (components[currentIdx] !== latestComponent) {
-    components[currentIdx] = latestComponent;
-    actionType = 'SET_STATE';
-  } else {
-    actionType = 'SET_STATE_IF_EMPTY';
+  if (!states.has(latest)) {
+    states.set(latest, evaluate(initState));
   }
-  states.dispatch({
-    type: actionType,
-    index: currentIdx,
-    state: evaluate(initState),
-  });
 
-  const getState = () => states.getState()[currentIdx];
   return [
-    getState(),
+    states.get(latest),
     function setState(newState) {
-      states.dispatch({
-        type: 'SET_STATE',
-        index: currentIdx,
-        state: evaluate(newState, getState()),
-      });
+      states.set(latest, evaluate(newState, states.get(latest)));
       dispatcher.dispatch({type: '@@vomjs/RENDER'});
-    },
+    }
   ];
 }
 
+const cleanups = [];
+dispatcher.register(payload => {
+  if (payload.type === '@@vomjs/RENDER') {
+    cleanups.forEach(cleanUp => cleanUp());
+    clearArray(cleanups);
+  }
+});
 export function useEffect(didUpdate, stateDeps) {
-  const currentIdx = depIdx.getState();
-  depIdx.dispatch({type: 'INCREMENT'});
+  const latest = getLatestFunction();
+  const didCalled = deps.has(latest);
+  const needUpdate = didCalled || typeof stateDeps === 'undefined';
 
-  const firstCall =
-    isFirstCall(deps.getState(), currentIdx) ||
-    typeof stateDeps === 'undefined';
-
-  if (firstCall && stateDeps) {
-    deps.dispatch({
-      type: 'SET_STATE',
-      index: currentIdx,
-      state: [...stateDeps || []],
-    });
+  if (needUpdate && stateDeps) {
+    deps.set(latest, stateDeps);
   }
 
-  if (firstCall || !isArrayEquals(deps.getState()[currentIdx], stateDeps)) {
-    deps.dispatch({
-      type: 'SET_STATE',
-      index: currentIdx,
-      state: [...stateDeps || []],
+  if (!needUpdate && isArrayEquals(deps.get(latest), stateDeps || []))
+    return;
+
+  requestAnimationFrame(() => {
+    nextTick(() => {
+      const cleanup = didUpdate();
+      if (typeof cleanup === 'function') {
+        cleanups.push(cleanup);
+      }
     });
-    // useEffect는 브라우저 화면이 다 그려질 때까지 지연됩니다
-    requestAnimationFrame(() => {
-      // 다음 어떤 새로운 렌더링이 발생하기 이전에 발생하는 것도 보장합니다
-      nextTick(() => {
-        const cleanUp = didUpdate();
-        if (typeof cleanUp === 'function') {
-          prevCleanUps.push(cleanUp);
-        }
-      });
-    });
-  }
+  });
 }
 
 export function useRef(initValue) {
-  const currentIdx = refIdx.getState();
-  refIdx.dispatch({type: 'INCREMENT'});
+  const latest = getLatestFunction();
 
   let ref, refHash;
-  if (isFirstCall(refs.getState(), currentIdx)) {
+  if (!refs.has(latest)) {
     refHash = getHash();
     ref = new Reference({
       hash: refHash,
       current: initValue,
     });
-
-    refs.dispatch({
-      type: 'SET_STATE',
-      index: currentIdx,
-      state: ref,
-    });
+    refs.set(latest, ref);
   } else {
-    ref = refs.getState()[currentIdx];
-    refHash = `${ref}`;
+    ref = refs.get(latest);
+    refHash = String(ref);
   }
   nextTick(() => {
     const selected = document.querySelector(`[data-ref="${refHash}"]`);

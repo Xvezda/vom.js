@@ -15,24 +15,26 @@ function getComponentName(func) {
   return null;
 }
 
-export let latestComponent = null;
+const exprFunctions = new Set();
+export const getLatestFunction = () => [...exprFunctions].pop();
 function exprToString(expr) {
   return match(expr)
     .when(Array.isArray, () => expr.map(e => exprToString(e)).join(''))
     .when(() => ['boolean', 'undefined'].includes(typeof expr) || expr === null, '')
     .when(() => expr instanceof Template || expr instanceof Reference, () => expr.toString())
     .when(() => typeof expr === 'function', () => {
-      const componentName = getComponentName(expr);
-      if (componentName) {
-        latestComponent = componentName;
-      }
-      return expr();
+      try {
+        exprFunctions.add(expr);
+        return expr();
+      } finally {}
     })
     .otherwise(() => escapeEntities(expr.toString()));
 }
 
 export class Template {
   constructor(strings, args) {
+    exprFunctions.clear();
+
     const result = strings[0] + strings.slice(1).reduce((acc, v, i) => {
       const expr = args[i];
       return acc + exprToString(expr) + v;
