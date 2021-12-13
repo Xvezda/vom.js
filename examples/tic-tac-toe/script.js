@@ -50,7 +50,7 @@ function Board(props) {
   );
 
   const renderSquare = (idx) => {
-    return Square.bind(null, {
+    return Square({
       delegate: boardRef,
       idx,
       value: props.squares[idx],
@@ -153,7 +153,7 @@ function Game(props) {
   return html`
     <div class="game">
       <div class="game-board">
-        ${Board.bind(null, {
+        ${Board({
           squares: current.squares,
           onClick: (i) => handleClick(i),
         })}
