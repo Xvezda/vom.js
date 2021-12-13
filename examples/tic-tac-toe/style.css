@@ -28,6 +28,10 @@ ol, ul {
   width: 34px;
 }
 
+.square:active {
+  color: inherit;
+}
+
 .square:focus {
   outline: none;
 }
