@@ -14,6 +14,23 @@ import {
 } from './helpers.js';
 
 
+const memos = new Map();
+const memoDeps = new Map();
+export function useMemo(callback, deps) {
+  const latest = getLatestFunction();
+
+  if (!memoDeps.has(latest)) {
+    memoDeps.set(latest, deps);
+  }
+
+  if (typeof deps === 'undefined' ||
+      !deepEquals(memoDeps.get(latest), deps) ||
+      !memos.has(latest)) {
+    memos.set(latest, callback());
+  }
+  return memos.get(latest);
+}
+
 const states = new Map();
 export function useState(initState) {
   const latest = getLatestFunction();
