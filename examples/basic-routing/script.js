@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   useEffect,
-  useEventListener,
   useDelegation,
 } from 'vomjs';
 import {match} from '@vomjs/tools';

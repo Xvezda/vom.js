@@ -5,8 +5,10 @@
 
 import {
   html,
+  bind,
   render,
   useState,
+  useCallback,
   useDelegation,
 } from 'vomjs';
 
@@ -50,7 +52,7 @@ function Board(props) {
   );
 
   const renderSquare = (idx) => {
-    return Square({
+    return bind(Square)({
       delegate: boardRef,
       idx,
       value: props.squares[idx],
@@ -89,7 +91,7 @@ function Game(props) {
     xIsNext: true
   });
 
-  const handleClick = (i) => {
+  const handleClick = useCallback((i) => {
     setState(state => {
       const history = state.history.slice(0, state.stepNumber + 1);
       const current = history[history.length - 1];
@@ -109,15 +111,15 @@ function Game(props) {
         xIsNext: !state.xIsNext,
       };
     });
-  };
+  }, []);
 
-  const jumpTo = (step) => {
+  const jumpTo = useCallback((step) => {
     setState(state => ({
       ...state,
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     }));
-  };
+  }, []);
 
   const history = state.history;
   const current = history[state.stepNumber];
@@ -153,9 +155,9 @@ function Game(props) {
   return html`
     <div class="game">
       <div class="game-board">
-        ${Board({
+        ${bind(Board)({
           squares: current.squares,
-          onClick: (i) => handleClick(i),
+          onClick: handleClick,
         })}
       </div>
       <div class="game-info">
