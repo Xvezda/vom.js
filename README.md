@@ -5,5 +5,5 @@ React-like 인터페이스를 제공하는 SPA 프레임워크
 
 [Tic Tac Toe](https://codesandbox.io/s/github/Xvezda/vom.js/tree/main/examples/tic-tac-toe?file=/script.js)
 
-[Basic Routing](https://codesandbox.io/s/github/Xvezda/vom.js/tree/main/examples/tic-tac-toe?file=/script.js)
+[Basic Routing](https://codesandbox.io/s/github/Xvezda/vom.js/tree/main/examples/basic-routing?file=/script.js)
 
