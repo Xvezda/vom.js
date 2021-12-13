@@ -14,21 +14,31 @@ import {
 } from './helpers.js';
 
 
-const memos = new Map();
-const memoDeps = new Map();
-export function useMemo(callback, deps) {
-  const latest = getLatestFunction();
+let idx = -1;
+const states = [];
+dispatcher.register(payload => {
+  if (payload.type === ActionTypes.RENDER) {
+    states.splice(idx, states.length-idx);
+    idx = -1;
+  }
+});
 
-  if (!memoDeps.has(latest)) {
-    memoDeps.set(latest, deps);
+export function useMemo(callback, deps) {
+  ++idx;
+
+  if (!states[idx]) {
+    states[idx] = {
+      callback,
+      deps,
+    };
   }
 
   if (typeof deps === 'undefined' ||
-      !deepEquals(memoDeps.get(latest), deps) ||
-      !memos.has(latest)) {
-    memos.set(latest, callback());
+      !deepEquals(states[idx].deps, deps) ||
+      !states[idx].memo) {
+    states[idx].memo = callback();
   }
-  return memos.get(latest);
+  return states[idx].memo;
 }
 
 
@@ -36,18 +46,24 @@ export const useCallback =
   (callback, deps) => useMemo(() => callback, deps);
 
 
-const states = new Map();
 export function useState(initState) {
+  ++idx;
   const latest = getLatestFunction();
 
-  if (!states.has(latest)) {
-    states.set(latest, callIfFunction(initState));
+  if (!states[idx] || states[idx].component !== latest) {
+    states[idx] = {
+      component: latest,
+      state: callIfFunction(initState),
+    }
   }
-
+  const curIdx = idx;
   return [
-    states.get(latest),
+    states[curIdx].state,
     function setState(newState) {
-      states.set(latest, callIfFunction(newState, [states.get(latest)]));
+      if (states[curIdx].component !== latest) {
+        return;
+      }
+      states[curIdx].state = callIfFunction(newState, [states[curIdx].state]);
       dispatcher.dispatch({type: ActionTypes.RENDER});
     }
   ];
@@ -61,17 +77,24 @@ dispatcher.register(payload => {
     clearArray(cleanups);
   }
 });
-const deps = new Map();
-
-export function useEffect(didUpdate, stateDeps) {
+export function useEffect(didUpdate, deps) {
+  ++idx;
   const latest = getLatestFunction();
-  const didCalled = deps.has(latest);
-  const needUpdate = didCalled || typeof stateDeps === 'undefined';
+  const didCalled = typeof states[idx] !== 'undefined';
+  const needUpdate = !didCalled || typeof deps === 'undefined';
 
-  if (needUpdate && stateDeps)
-    deps.set(latest, stateDeps);
+  if (!states[idx]) {
+    states[idx] = {};
+  }
 
-  if (!needUpdate && deepEquals(deps.get(latest), stateDeps || []))
+  if (deps) {
+    states[idx].deps = deps;
+  }
+
+  if (!needUpdate)
+    return;
+
+  if (deepEquals(states[idx].deps, deps || []))
     return;
 
   requestAnimationFrame(() => {
@@ -85,20 +108,22 @@ export function useEffect(didUpdate, stateDeps) {
 }
 
 
-const refs = new Map();
 export function useRef(initValue) {
+  ++idx;
   const latest = getLatestFunction();
 
   let ref, refHash;
-  if (!refs.has(latest)) {
+  if (!states[idx]) {
     refHash = getHash();
     ref = new Reference({
       hash: refHash,
       current: initValue,
     });
-    refs.set(latest, ref);
+    states[idx] = {
+      ref,
+    };
   } else {
-    ref = refs.get(latest);
+    ref = states[idx].ref;
     refHash = String(ref);
   }
   nextTick(() => {
