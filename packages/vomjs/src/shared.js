@@ -1,4 +1,3 @@
-import { match } from '@vomjs/tools';
 import { Dispatcher } from '@vomjs/store';
 import { escapeEntities } from './helpers.js';
 
@@ -7,17 +6,19 @@ export const dispatcher = new Dispatcher;
 const exprFunctions = new Set();
 export const getLatestFunction = () => [...exprFunctions].pop();
 function exprToString(expr) {
-  return match(expr)
-    .when(Array.isArray, () => expr.map(e => exprToString(e)).join(''))
-    .when(() => ['boolean', 'undefined'].includes(typeof expr) || expr === null, '')
-    .when(() => expr instanceof Template || expr instanceof Reference, () => expr.toString())
-    .when(() => typeof expr === 'function', () => {
-      try {
-        exprFunctions.add(expr);
-        return expr();
-      } finally {}
-    })
-    .otherwise(() => escapeEntities(expr.toString()));
+  switch (true) {
+    case Array.isArray(expr):
+      return expr.map(e => exprToString(e)).join('');
+    case (['boolean', 'undefined'].includes(typeof expr) || expr === null):
+      return '';
+    case (expr instanceof Template || expr instanceof Reference):
+      return String(expr);
+    case (typeof expr === 'function'):
+      exprFunctions.add(expr);
+      return expr();
+    default:
+      return escapeEntities(expr.toString());
+  }
 }
 
 export class Template {
