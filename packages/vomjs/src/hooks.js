@@ -1,3 +1,5 @@
+import { deepEquals } from '@vomjs/tools';
+
 import ActionTypes from './action-types.js';
 import {
   Reference,
@@ -5,7 +7,6 @@ import {
   getLatestFunction,
 } from './shared.js';
 import {
-  isArrayEquals,
   callIfFunction,
   getHash,
   nextTick,
@@ -48,7 +49,7 @@ export function useEffect(didUpdate, stateDeps) {
   if (needUpdate && stateDeps)
     deps.set(latest, stateDeps);
 
-  if (!needUpdate && isArrayEquals(deps.get(latest), stateDeps || []))
+  if (!needUpdate && deepEquals(deps.get(latest), stateDeps || []))
     return;
 
   requestAnimationFrame(() => {

@@ -1,4 +1,5 @@
-const wildcard = Object.create(null);
+import { deepEquals, wildcard } from './common.js';
+
 
 function PatternMatch(target) {
   this.$target = target;
@@ -9,28 +10,6 @@ function PatternMatch(target) {
 PatternMatch.match = function (target) {
   return new PatternMatch(target);
 };
-
-function deepEquals(a, b) {
-  if (Array.isArray(a)) {
-    return [...a].every((v, i) => {
-      if (v === wildcard) {
-        return b.length > i;
-      }
-      return deepEquals(v, b[i]);
-    });
-  } else if (typeof a === 'object' && b) {
-    return Object.entries(a)
-      .map(([k, v]) => {
-        if (v === wildcard) {
-          return k in b;
-        }
-        return deepEquals(v, b[k]);
-      })
-      .every(x => x);
-  } else {
-    return a === b;
-  }
-}
 
 PatternMatch.prototype.when = function (pattern, ifMatch) {
   if (this.$matched) {
@@ -65,9 +44,5 @@ PatternMatch.prototype.otherwise = function (otherwise) {
   return this.$result;
 };
 
-export {
-  deepEquals as exact,
-  wildcard as _,
-};
 export const match = PatternMatch.match;
 export default PatternMatch;

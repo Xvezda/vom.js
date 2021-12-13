@@ -1,3 +1,5 @@
+import { deepEquals } from '@vomjs/tools';
+
 export function nextTick(callback) {
   const promise = Promise.resolve();
   if (typeof callback === 'function') {
@@ -11,16 +13,17 @@ export function isSubclass(cls, base) {
   return cls.prototype instanceof base;
 }
 
-export function isArrayEquals(a, b, key=Object.is) {
-  return a && b && a.length === b.length && a.every((v, i) => key(v, b[i]));
-}
-
 export function getHash() {
-  return Array(2).fill().map(() => Math.random().toString(36).substring(2)).join('');
+  return Array(2)
+    .fill()
+    .map(() => Math.random().toString(36).substring(2))
+    .join('');
 }
 
 export function forEachAll(a, b, apply) {
-  for (let i = 0, max = Math.max([...a].length, [...b].length); i < max; ++i) {
+  for (let i = 0, max = Math.max([...a].length, [...b].length);
+      i < max;
+      ++i) {
     apply(a[i], b[i], i, a, b);
   }
 }
