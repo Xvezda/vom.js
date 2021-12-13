@@ -31,6 +31,11 @@ export function useMemo(callback, deps) {
   return memos.get(latest);
 }
 
+
+export const useCallback =
+  (callback, deps) => useMemo(() => callback, deps);
+
+
 const states = new Map();
 export function useState(initState) {
   const latest = getLatestFunction();
