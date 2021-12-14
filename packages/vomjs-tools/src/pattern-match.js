@@ -27,7 +27,7 @@ class PatternMatch {
     }
     if (
       typeof this.$result === 'undefined' &&
-      (typeof pattern === 'function' &&  pattern(this.$target)) ||
+      (typeof pattern === 'function' && pattern(this.$target)) ||
       (pattern instanceof RegExp && pattern.test(this.$target)) ||
       (deepEquals(pattern, this.$target))
     ) {

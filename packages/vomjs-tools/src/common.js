@@ -49,7 +49,7 @@ export function forEachAll(a, b, apply) {
 }
 
 export function callIfFunction(value, args) {
-  return value instanceof Function ? value(...args || []) : value;
+  return typeof value === 'function' ? value(...args || []) : value;
 }
 
 
