@@ -96,10 +96,7 @@ export function useEffect(didUpdate, deps) {
     states[idx].deps = deps;
   }
 
-  if (!needUpdate)
-    return;
-
-  if (deepEquals(states[idx].deps, deps || []))
+  if (!needUpdate && deepEquals(states[idx].deps, deps || []))
     return;
 
   requestAnimationFrame(() => {
