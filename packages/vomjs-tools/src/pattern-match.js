@@ -48,5 +48,5 @@ class PatternMatch {
   }
 }
 
-export const match = PatternMatch.match;
+export const match = /*#__PURE__*/PatternMatch.match;
 export default PatternMatch;
