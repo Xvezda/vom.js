@@ -1,4 +1,4 @@
-import { forEachAll } from './helpers.js';
+import { forEachAll } from '@vomjs/tools';
 
 export function patchAttributes(srcAttrs, dstAttrs) {
   for (let i = 0, attrs = [...srcAttrs]; i < attrs.length; ++i) {

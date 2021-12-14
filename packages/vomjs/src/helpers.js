@@ -1,26 +1,5 @@
 import { deepEquals } from '@vomjs/tools';
 
-export function getHash() {
-  return Array(2)
-    .fill()
-    .map(() => Math.random().toString(36).substring(2))
-    .join('');
-}
-
-export function forEachAll(a, b, apply) {
-  for (
-    let i = 0, max = Math.max([...a].length, [...b].length);
-    i < max;
-    ++i
-  ) {
-    apply(a[i], b[i], i, a, b);
-  }
-}
-
-export function callIfFunction(value, args) {
-  return value instanceof Function ? value(...args || []) : value;
-}
-
 const placeholder = document.createElement('div');
 export function escapeEntities(html) {
   placeholder.innerHTML = '';
