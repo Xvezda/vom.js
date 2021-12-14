@@ -26,9 +26,15 @@ whenRender(() => {
   states.splice(idx, states.length-idx);
   idx = -1;
 });
-export function useMemo(callback, deps) {
-  ++idx;
 
+function stateful(hook) {
+  return function (...args) {
+    ++idx;
+    return hook(...args);
+  }
+}
+
+export const useMemo = stateful((callback, deps) => {
   if (!states[idx]) {
     states[idx] = {
       callback,
@@ -44,15 +50,14 @@ export function useMemo(callback, deps) {
     states[idx].memo = callback();
   }
   return states[idx].memo;
-}
+});
 
 
 export const useCallback =
   (callback, deps) => useMemo(() => callback, deps);
 
 
-export function useState(initState) {
-  ++idx;
+export const useState = stateful((initState) => {
   const latest = getLatestFunction();
 
   if (!states[idx] || states[idx].component !== latest) {
@@ -74,7 +79,7 @@ export function useState(initState) {
       dispatcher.dispatch({type: ActionTypes.RENDER});
     }
   ];
-}
+});
 
 
 const cleanups = [];
@@ -82,8 +87,7 @@ whenRender(() => {
   cleanups.forEach(cleanUp => cleanUp());
   cleanups.splice(0, cleanups.length);
 });
-export function useEffect(didUpdate, deps) {
-  ++idx;
+export const useEffect = stateful((didUpdate, deps) => {
   const latest = getLatestFunction();
   const didCalled = typeof states[idx] !== 'undefined';
   const needUpdate = !didCalled || typeof deps === 'undefined';
@@ -107,11 +111,10 @@ export function useEffect(didUpdate, deps) {
       }
     });
   });
-}
+});
 
 
-export function useRef(initValue) {
-  ++idx;
+export const useRef = stateful((initValue) => {
   const latest = getLatestFunction();
 
   let ref, refHash;
@@ -133,7 +136,7 @@ export function useRef(initValue) {
     ref.current = selected;
   });
   return ref;
-}
+});
 
 
 export function useEventListener(ref, eventName, handler) {
