@@ -9,7 +9,6 @@ import {
 import {
   callIfFunction,
   getHash,
-  nextTick,
   clearArray,
 } from './helpers.js';
 
@@ -101,7 +100,7 @@ export function useEffect(didUpdate, deps) {
     return;
 
   requestAnimationFrame(() => {
-    nextTick(() => {
+    queueMicrotask(() => {
       const cleanup = didUpdate();
       if (typeof cleanup === 'function') {
         cleanups.push(cleanup);
@@ -129,7 +128,7 @@ export function useRef(initValue) {
     ref = states[idx].ref;
     refHash = String(ref);
   }
-  nextTick(() => {
+  queueMicrotask(() => {
     const selected = document.querySelector(`[data-ref="${refHash}"]`);
     ref.current = selected;
   });

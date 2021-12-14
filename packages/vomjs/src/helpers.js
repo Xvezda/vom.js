@@ -1,14 +1,5 @@
 import { deepEquals } from '@vomjs/tools';
 
-export function nextTick(callback) {
-  const promise = Promise.resolve();
-  if (typeof callback === 'function') {
-    return promise.then(callback).catch(console.error);
-  } else {
-    return promise;
-  }
-}
-
 export function isSubclass(cls, base) {
   return cls.prototype instanceof base;
 }
