@@ -1,3 +1,4 @@
+import { getHash } from '@vomjs/tools';
 export default {
-  RENDER: '@@vomjs/RENDER',
+  RENDER: `@@vomjs/RENDER.${getHash()}`,
 };
