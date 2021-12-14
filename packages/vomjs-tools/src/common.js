@@ -1,10 +1,11 @@
 export const wildcard = /*#__PURE__*/Object.create(null);
 export function deepEquals(a, b) {
-  if (a === undefined && b !== undefined)
+  if (
+    (a === undefined && b !== undefined) ||
+    (a === null && b !== null)
+  ) {
     return false;
-
-  if (a === null && b !== null)
-    return false;
+  }
 
   if (Array.isArray(a)) {
     return [...a].every((v, i) => {
@@ -32,4 +33,23 @@ export function deepEquals(a, b) {
     return a === b;
   }
 }
+
+export function getHash() {
+  return Math.random().toString(36).substring(2);
+}
+
+export function forEachAll(a, b, apply) {
+  for (
+    let i = 0, max = Math.max([...a].length, [...b].length);
+    i < max;
+    ++i
+  ) {
+    apply(a[i], b[i], i, a, b);
+  }
+}
+
+export function callIfFunction(value, args) {
+  return value instanceof Function ? value(...args || []) : value;
+}
+
 
