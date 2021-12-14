@@ -14,15 +14,20 @@ import {
 } from './helpers.js';
 
 
+function whenRender(task) {
+  dispatcher.register(payload => {
+    if (payload.type === ActionTypes.RENDER) {
+      task();
+    }
+  });
+}
+
 let idx = -1;
 const states = [];
-dispatcher.register(payload => {
-  if (payload.type === ActionTypes.RENDER) {
-    states.splice(idx, states.length-idx);
-    idx = -1;
-  }
+whenRender(() => {
+  states.splice(idx, states.length-idx);
+  idx = -1;
 });
-
 export function useMemo(callback, deps) {
   ++idx;
 
@@ -71,11 +76,9 @@ export function useState(initState) {
 
 
 const cleanups = [];
-dispatcher.register(payload => {
-  if (payload.type === ActionTypes.RENDER) {
-    cleanups.forEach(cleanUp => cleanUp());
-    clearArray(cleanups);
-  }
+whenRender(() => {
+  cleanups.forEach(cleanUp => cleanUp());
+  clearArray(cleanups);
 });
 export function useEffect(didUpdate, deps) {
   ++idx;
