@@ -9,5 +9,6 @@
     "name": "Xvezda",
     "email": "xvezda@naver.com",
     "url": "https://xvezda.com/"
-  }
+  },
+  "sideEffects": false
 }
