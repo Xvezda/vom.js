@@ -1,4 +1,8 @@
-import { deepEquals, wildcard } from './common.js';
+import {
+  deepEquals,
+  wildcard,
+  callIfFunction,
+} from './common.js';
 export {
   wildcard as _,
   deepEquals as exact,
@@ -21,28 +25,21 @@ class PatternMatch {
     } else if (pattern === wildcard) {
       return this.otherwise(ifMatch);
     }
-    const flag = (typeof pattern === 'function' && pattern(this.$target)) ||
+    if (
+      typeof this.$result === 'undefined' &&
+      (typeof pattern === 'function' &&  pattern(this.$target)) ||
       (pattern instanceof RegExp && pattern.test(this.$target)) ||
-      (deepEquals(pattern, this.$target));
-
-    if (flag && typeof this.$result === 'undefined') {
+      (deepEquals(pattern, this.$target))
+    ) {
       this.$matched = true;
-      if (typeof ifMatch === 'function') {
-        this.$result = ifMatch(this.$target);
-      } else {
-        this.$result = ifMatch;
-      }
+      this.$result = callIfFunction(ifMatch, [this.$target]);
     }
     return this;
   }
 
   otherwise(fallback) {
     if (!this.$matched && fallback) {
-      if (typeof fallback === 'function') {
-        this.$result = fallback();
-      } else {
-        this.$result = fallback;
-      }
+      this.$result = callIfFunction(fallback);
     }
     return this.$result;
   }

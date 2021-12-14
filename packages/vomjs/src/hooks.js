@@ -1,4 +1,8 @@
-import { deepEquals } from '@vomjs/tools';
+import {
+  deepEquals,
+  callIfFunction,
+  getHash,
+} from '@vomjs/tools';
 
 import ActionTypes from './action-types.js';
 import {
@@ -6,10 +10,6 @@ import {
   dispatcher,
   getLatestFunction,
 } from './shared.js';
-import {
-  callIfFunction,
-  getHash,
-} from './helpers.js';
 
 
 function whenRender(task) {
