@@ -1,0 +1,11 @@
+{
+  "node": "14",
+  "packages": [
+    "packages/*"
+  ],
+  "sandboxes": [
+    "/examples/tic-tac-toe",
+    "/examples/basic-routing"
+  ]
+}
+
