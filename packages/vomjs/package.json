@@ -5,8 +5,8 @@
   "main": "dist/vom.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "webpack --node-env production",
     "build:dev": "webpack --node-env development"
+    "build": "webpack --node-env production --config webpack.prod.js",
   },
   "author": {
     "name": "Xvezda",

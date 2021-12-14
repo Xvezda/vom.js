@@ -1,8 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
-  mode: 'production',
   entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -11,7 +9,7 @@ module.exports = {
     library: {
       type: 'umd',
       name: 'Vom',
-    }
+    },
   },
   module: {
     rules: [
@@ -21,16 +19,11 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              rootMode: 'upward'
-            }
+              rootMode: 'upward',
+            },
           },
         ],
       },
     ],
   },
-  plugins: [
-    new webpack.EnvironmentPlugin({
-      'NODE_ENV': 'production',
-    })
-  ]
 };
