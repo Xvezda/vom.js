@@ -151,7 +151,7 @@ export function useEventListener(ref, eventName, handler) {
 export function useDelegation(eventName, handler) {
   const ref = useRef();
   const delegate = (event) => {
-    const selector = `[data-delegate="${ref}"`;
+    const selector = `[data-delegate="${ref}"]`;
     const target = event.target.closest(selector);
     if (!target)
       return;
