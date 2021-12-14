@@ -1,6 +1,6 @@
 {
   "name": "basic-routing",
-  "version": "0.0.3-alpha.5",
+  "version": "0.0.3-rc.0",
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html"
@@ -15,7 +15,7 @@
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
-    "@vomjs/tools": "^0.0.2",
-    "vomjs": "^0.0.3-alpha.4"
+    "@vomjs/tools": "^0.0.3-rc.0",
+    "vomjs": "^0.0.3-rc.0"
   }
 }
