@@ -1,9 +1,5 @@
 import { deepEquals } from '@vomjs/tools';
 
-export function isSubclass(cls, base) {
-  return cls.prototype instanceof base;
-}
-
 export function getHash() {
   return Array(2)
     .fill()
@@ -12,9 +8,11 @@ export function getHash() {
 }
 
 export function forEachAll(a, b, apply) {
-  for (let i = 0, max = Math.max([...a].length, [...b].length);
-      i < max;
-      ++i) {
+  for (
+    let i = 0, max = Math.max([...a].length, [...b].length);
+    i < max;
+    ++i
+  ) {
     apply(a[i], b[i], i, a, b);
   }
 }
@@ -28,10 +26,6 @@ export function escapeEntities(html) {
   placeholder.innerHTML = '';
   placeholder.textContent = html;
   return placeholder.innerHTML;
-}
-
-export function clearArray(array) {
-  return array.splice(0, array.length);
 }
 
 const attrsMap = new Map();

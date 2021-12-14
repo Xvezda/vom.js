@@ -10,7 +10,10 @@ export function patchAttributes(srcAttrs, dstAttrs) {
   }
   for (let i = 0, attrs = [...dstAttrs]; i < attrs.length; ++i) {
     const dstAttr = attrs[i];
-    if (process.env.NODE_ENV !== 'production' && dstAttr.name === 'style') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      dstAttr.name === 'style'
+    ) {
       continue;
     }
     if (srcAttrs.getNamedItem(dstAttr.name) === null) {
@@ -51,6 +54,7 @@ export function patchNode(parentNode, srcNode, dstNode) {
 }
 
 export function patchNodes(src, dst) {
-  const [srcChildNodes, dstChildNodes] = [[...src.childNodes], [...dst.childNodes]];
+  const srcChildNodes = [...src.childNodes];
+  const dstChildNodes = [...dst.childNodes];
   forEachAll(srcChildNodes, dstChildNodes, patchNode.bind(null, dst));
 }

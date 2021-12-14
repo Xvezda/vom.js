@@ -9,7 +9,6 @@ import {
 import {
   callIfFunction,
   getHash,
-  clearArray,
 } from './helpers.js';
 
 
@@ -37,9 +36,11 @@ export function useMemo(callback, deps) {
     };
   }
 
-  if (typeof deps === 'undefined' ||
-      !deepEquals(states[idx].deps, deps) ||
-      !states[idx].memo) {
+  if (
+    typeof deps === 'undefined' ||
+    !deepEquals(states[idx].deps, deps) ||
+    !states[idx].memo
+  ) {
     states[idx].memo = callback();
   }
   return states[idx].memo;
@@ -67,7 +68,9 @@ export function useState(initState) {
       if (states[curIdx].component !== latest) {
         return;
       }
-      states[curIdx].state = callIfFunction(newState, [states[curIdx].state]);
+      states[curIdx].state = callIfFunction(newState, [
+        states[curIdx].state
+      ]);
       dispatcher.dispatch({type: ActionTypes.RENDER});
     }
   ];
@@ -77,7 +80,7 @@ export function useState(initState) {
 const cleanups = [];
 whenRender(() => {
   cleanups.forEach(cleanUp => cleanUp());
-  clearArray(cleanups);
+  cleanups.splice(0, cleanups.length);
 });
 export function useEffect(didUpdate, deps) {
   ++idx;

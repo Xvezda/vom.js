@@ -9,7 +9,10 @@ function exprToString(expr) {
   switch (true) {
     case Array.isArray(expr):
       return expr.map(e => exprToString(e)).join('');
-    case (['boolean', 'undefined'].includes(typeof expr) || expr === null):
+    case (
+      ['boolean', 'undefined'].includes(typeof expr) ||
+      expr === null
+    ):
       return '';
     case (expr instanceof Template || expr instanceof Reference):
       return String(expr);
@@ -25,7 +28,9 @@ export class Template {
   constructor(strings, args) {
     exprFunctions.clear();
 
-    const result = strings[0] + strings.slice(1).reduce((acc, v, i) => {
+    const result = strings[0] + strings.slice(1).reduce(
+      (acc, v, i) =>
+    {
       const expr = args[i];
       return acc + exprToString(expr) + v;
     }, '');

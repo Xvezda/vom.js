@@ -15,7 +15,9 @@ function renderTo(element, render) {
 }
 
 export function render(component, parent) {
-  const bindedRenderer = renderTo.bind(null, parent, () => html`${component}`);
+  const bindedRenderer =
+    renderTo.bind(null, parent, () => html`${component}`);
+
   const initialize = () => {
     bindedRenderer();
     const rerender = payload => {
