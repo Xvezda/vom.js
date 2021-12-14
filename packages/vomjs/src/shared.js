@@ -17,7 +17,7 @@ function exprToString(expr) {
       exprFunctions.add(expr);
       return expr();
     default:
-      return escapeEntities(expr.toString());
+      return escapeEntities(String(expr));
   }
 }
 
