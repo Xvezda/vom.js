@@ -23,3 +23,5 @@ export function useEffect(effect: () => void, deps?: any[]): void;
 export function useRef(): Reference;
 export function useEventListener(ref: Reference, eventName: string, handler: EventListener): void;
 export function useDelegation(eventName: string, handler: (target: HTMLElement, event: Event) => void): Reference;
+export function useMemo<T>(toEvaluate: () => T, deps?: any[]): T;
+export function useCallback<T>(callback: T, deps?: any[]): T;
