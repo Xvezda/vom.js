@@ -10,7 +10,10 @@
     "prepare": "husky install",
     "prepublishOnly": "yarn build",
     "build": "yarn workspace vomjs build",
-    "test": "jest --verbose --cache"
+    "test": "jest --verbose --cache",
+    "define": "node scripts/defineSandbox.js",
+    "postversion": "yarn define",
+    "readme": "yarn define 'docs: update README (%h)'"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
