@@ -26,5 +26,5 @@ class Selector {
   }
 }
 
-export const select = Selector.select;
+export const select = /*#__PURE__*/Selector.select;
 export default Selector;

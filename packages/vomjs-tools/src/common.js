@@ -1,4 +1,4 @@
-export const wildcard = Object.create(null);
+export const wildcard = /*#__PURE__*/Object.create(null);
 export function deepEquals(a, b) {
   if (a === undefined && b !== undefined)
     return false;
