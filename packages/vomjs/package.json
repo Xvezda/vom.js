@@ -13,6 +13,7 @@
     "email": "xvezda@naver.com",
     "url": "https://xvezda.com/"
   },
+  "license": "MIT",
   "dependencies": {
     "@vomjs/store": "^0.0.3-rc.0",
     "@vomjs/tools": "^0.0.3"

@@ -16,5 +16,6 @@
     "email": "xvezda@naver.com",
     "url": "https://xvezda.com/"
   },
+  "license": "MIT",
   "sideEffects": false
 }
