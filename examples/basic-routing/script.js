@@ -45,8 +45,7 @@ function Counter() {
   `;
 }
 
-function Foo(props) {
-
+function Foo() {
   useEffect(() => {
     document.title = 'Foo page';
   });
@@ -59,7 +58,7 @@ function Foo(props) {
   `;
 }
 
-function Bar(props) {
+function Bar() {
   useEffect(() => {
     document.title = 'Bar page';
   });
@@ -72,7 +71,7 @@ function Bar(props) {
   `;
 }
 
-function Main(props) {
+function Main() {
   useEffect(() => {
     document.title = 'Main page';
   });

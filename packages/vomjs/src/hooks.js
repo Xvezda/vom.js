@@ -31,7 +31,7 @@ function stateful(hook) {
   return function (...args) {
     ++idx;
     return hook(...args);
-  }
+  };
 }
 
 export const useMemo = stateful((callback, deps) => {
@@ -64,7 +64,7 @@ export const useState = stateful((initState) => {
     states[idx] = {
       component: latest,
       state: callIfFunction(initState),
-    }
+    };
   }
   const curIdx = idx;
   return [
@@ -88,7 +88,6 @@ whenRender(() => {
   cleanups.splice(0, cleanups.length);
 });
 export const useEffect = stateful((didUpdate, deps) => {
-  const latest = getLatestFunction();
   const didCalled = typeof states[idx] !== 'undefined';
   const needUpdate = !didCalled || typeof deps === 'undefined';
 
@@ -115,8 +114,6 @@ export const useEffect = stateful((didUpdate, deps) => {
 
 
 export const useRef = stateful((initValue) => {
-  const latest = getLatestFunction();
-
   let ref, refHash;
   if (!states[idx]) {
     refHash = getHash();

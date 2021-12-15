@@ -24,5 +24,5 @@ export function bind(component) {
     bindedMap.set(component, component.bind(null, attrs));
     attrsMap.set(component, attrs);
     return bindedMap.get(component);
-  }
+  };
 }

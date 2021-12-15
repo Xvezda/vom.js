@@ -144,8 +144,8 @@ async function listExamples(baseDir) {
       ))
   );
   return packages
-    .filter(package => package.status === 'fulfilled')
-    .map(package => package.value);
+    .filter(pkg => pkg.status === 'fulfilled')
+    .map(pkg => pkg.value);
 }
 
 async function defineExamples(files='examples') {
@@ -173,7 +173,7 @@ async function getProjectRoot() {
 }
 
 async function getLatestHash() {
-  const { stdout } = await execPromise(`git log -1 --pretty='format:%h'`);
+  const { stdout } = await execPromise("git log -1 --pretty='format:%h'");
   return stdout.trim();
 }
 
@@ -188,7 +188,7 @@ async function main(argv) {
   const readmeTemplate = baseTemplatePath + '.ejs';
 
   const demos = await defineExamples();
-  const rendered = await renderFile(readmeTemplate, { demos }, {})
+  const rendered = await renderFile(readmeTemplate, { demos }, {});
 
   const readme = baseTemplatePath + '.md';
   await writeFile(readme, rendered);
