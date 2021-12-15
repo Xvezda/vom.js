@@ -80,7 +80,7 @@ function Board(props) {
   `;
 }
 
-function Game(props) {
+function Game() {
   const [state, setState] = useState({
     history: [
       {

@@ -28,8 +28,7 @@ export class Template {
   constructor(strings, args) {
     exprFunctions.clear();
 
-    const result = strings[0] + strings.slice(1).reduce(
-      (acc, v, i) =>
+    const result = strings[0] + strings.slice(1).reduce((acc, v, i) =>
     {
       const expr = args[i];
       return acc + exprToString(expr) + v;
