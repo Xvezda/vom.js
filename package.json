@@ -11,6 +11,7 @@
     "prepublishOnly": "yarn build",
     "build": "yarn workspace vomjs build",
     "test": "jest --verbose --cache",
+    "lint": "eslint --cache .",
     "define": "node scripts/defineSandbox.js",
     "postversion": "yarn define",
     "readme": "yarn define 'docs: update README (%h)'"
