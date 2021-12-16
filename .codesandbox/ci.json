@@ -5,7 +5,8 @@
   ],
   "sandboxes": [
     "/examples/tic-tac-toe",
-    "/examples/basic-routing"
+    "/examples/basic-routing",
+    "/examples/counter"
   ]
 }
 
