@@ -1,6 +1,6 @@
 {
   "name": "counter",
-  "version": "0.0.0",
+  "version": "0.0.4-alpha.0",
   "main": "script.js",
   "scripts": {
     "start": "parcel index.html --open",
