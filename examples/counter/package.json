@@ -11,6 +11,6 @@
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
-    "vomjs": "^0.0.3"
+    "vomjs": "latest"
   }
 }
