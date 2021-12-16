@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html"
@@ -11,6 +11,6 @@
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
-    "vomjs": "^0.0.3"
+    "vomjs": "^1.0.0"
   }
 }

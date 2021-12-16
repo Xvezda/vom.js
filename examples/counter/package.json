@@ -1,6 +1,6 @@
 {
   "name": "counter",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "script.js",
   "scripts": {
     "start": "parcel index.html --open",
@@ -11,6 +11,6 @@
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
-    "vomjs": "^0.0.3"
+    "vomjs": "^1.0.0"
   }
 }

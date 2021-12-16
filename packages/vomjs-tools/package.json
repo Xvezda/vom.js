@@ -1,6 +1,6 @@
 {
   "name": "@vomjs/tools",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "자주 쓰이는 코드를 chaining 방식으로 이용할 수 있도록 제공하는 도구모음 패키지",
   "type": "module",
   "main": "src/index.js",

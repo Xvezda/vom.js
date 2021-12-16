@@ -1,6 +1,6 @@
 {
   "name": "@vomjs/store",
-  "version": "0.0.3-rc.0",
+  "version": "1.0.0",
   "description": "Flux 아키텍처를 구현한 상태관리 모듈",
   "main": "src/index.js",
   "devDependencies": {
