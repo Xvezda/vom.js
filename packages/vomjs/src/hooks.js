@@ -1,9 +1,3 @@
-import {
-  deepEquals,
-  callIfFunction,
-  getHash,
-} from '@vomjs/tools';
-
 import ActionTypes from './action-types.js';
 import {
   Reference,
@@ -11,6 +5,12 @@ import {
   getLatestFunction,
 } from './shared.js';
 
+import {
+  deepEquals,
+  callIfFunction,
+  getHash,
+} from '@vomjs/tools';
+import { createStore } from '@vomjs/store';
 
 function whenRender(task) {
   dispatcher.register(payload => {
@@ -133,6 +133,25 @@ export const useRef = stateful((initValue) => {
     ref.current = selected;
   });
   return ref;
+});
+
+
+export const useReducer = stateful((reducer, initialArg, init) => {
+  const curIdx = idx;
+  const lazyInit = () => init ? init(initialArg) : initialArg;
+  const [state, setState] = useState(lazyInit);
+
+  if (!states[curIdx]) {
+    const store = createStore(() => state);
+    states[curIdx] = store;
+    store.reduce = reducer;
+    store.subscribe(() => setState(states[curIdx].getState()));
+  }
+
+  return [
+    state,
+    states[curIdx].dispatch.bind(states[curIdx]),
+  ];
 });
 
 
