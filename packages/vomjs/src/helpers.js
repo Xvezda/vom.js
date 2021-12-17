@@ -14,22 +14,23 @@ export function escapeEntities(html) {
   return placeholder.innerHTML;
 }
 
-const attrsMap = new Map();
 const bindedMap = new Map();
 export function bind(component) {
   if (!bindedMap.has(component)) {
-    bindedMap.set(component, component);
+    const attrsMap = new Map();
+    attrsMap.set({}, component.bind(null));
+    bindedMap.set(component, attrsMap);
   }
-  if (!attrsMap.has(component)) {
-    attrsMap.set(component, {});
-  }
+  const attrsMap = bindedMap.get(component);
   // TODO: Support template literal syntax
   return function (attrs) {
-    if (deepEquals(attrsMap.get(component), attrs || {})) {
-      return bindedMap.get(component);
+    const found = [...attrsMap.entries()]
+      .find(([k]) => deepEquals(k, attrs || {}));
+
+    if (found) {
+      return found[1];
     }
-    bindedMap.set(component, component.bind(null, attrs));
-    attrsMap.set(component, attrs);
-    return bindedMap.get(component);
+    attrsMap.set(attrs, component.bind(null, attrs));
+    return attrsMap.get(attrs);
   };
 }
