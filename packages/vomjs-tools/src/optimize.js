@@ -2,9 +2,7 @@ export const debounce = time => {
   return callback => {
     let id = 0;
     const wrapper = (...args) => {
-      if (id !== 0) {
-        clearTimeout(id);
-      }
+      clearTimeout(id);
       id = setTimeout(() => {
         callback(...args);
       }, time);
