@@ -1,9 +1,9 @@
 import ActionTypes from './action-types.js';
 import { html } from './helpers.js';
-import { dispatcher } from './shared.js';
+import { dispatcher, Reference } from './shared.js';
 import { patchNodes } from './diff.js';
 
-import { throttle } from '@vomjs/tools';
+import { throttle, getHash } from '@vomjs/tools';
 
 const placeholder = document.createElement('div');
 function renderTo(element, render) {
@@ -30,4 +30,11 @@ export function render(component, parent) {
   } else {
     initialize();
   }
+}
+
+export function createRef() {
+  return new Reference({
+    hash: getHash(),
+    current: null,
+  });
 }

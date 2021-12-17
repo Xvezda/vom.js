@@ -1,6 +1,6 @@
 import ActionTypes from './action-types.js';
+import { createRef } from './core.js';
 import {
-  Reference,
   dispatcher,
   getLatestFunction,
 } from './shared.js';
@@ -8,7 +8,6 @@ import {
 import {
   deepEquals,
   callIfFunction,
-  getHash,
 } from '@vomjs/tools';
 import { createStore } from '@vomjs/store';
 
@@ -115,11 +114,11 @@ export const useEffect = stateful((didUpdate, deps) => {
 
 export const useRef = stateful((initValue) => {
   if (!states[idx]) {
+    const ref = createRef();
+    ref.current = initValue;
+
     states[idx] = {
-      ref: new Reference({
-        hash: getHash(),
-        current: initValue,
-      }),
+      ref,
     };
   }
   const ref = states[idx].ref;
