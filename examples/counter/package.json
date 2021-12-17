@@ -1,6 +1,6 @@
 {
   "name": "counter",
-  "version": "0.0.4-alpha.0",
+  "version": "0.0.4-rc.0",
   "source": "index.html",
   "main": "script.js",
   "scripts": {
