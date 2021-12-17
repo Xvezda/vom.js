@@ -144,6 +144,13 @@ export const useReducer = stateful((reducer, initialArg, init) => {
 });
 
 
+export const useImperativeHandle = (ref, createHandle, deps) => {
+  useEffect(() => {
+    ref.current = createHandle();
+  }, deps);
+};
+
+
 export function useEventListener(ref, eventName, handler) {
   useEffect(() => {
     if (!ref.current)
