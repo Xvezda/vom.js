@@ -7,6 +7,32 @@ import {
 } from './helpers.js';
 
 
+describe('html', () => {
+  test('html이 아닌 문자열을 escape 처리', () => {
+    const div = html`
+      <div>${'<script>/* malicious */</script>'}</div>
+    `;
+    expect(String(div)).not.toContain('<script>');
+  });
+
+  test('배열 html 변환', () => {
+    const items = ['foo', 'bar', 'baz'];
+    const id = 'list';
+    const list = html`
+      <ul id="${id}">
+        ${items.map(item => html`<li>${item}</li>`)}
+      </ul>
+    `;
+    document.body.innerHTML = String(list);
+
+    const listElement = document.getElementById(id);
+    const childs = Array.from(listElement.children);
+
+    expect(childs.map(child => child.textContent.trim()))
+      .toStrictEqual(items);
+  });
+});
+
 describe('bind', () => {
   const App = () => html`<div>hello world</div>`;
 
