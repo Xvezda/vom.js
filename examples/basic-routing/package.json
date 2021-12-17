@@ -1,6 +1,6 @@
 {
   "name": "basic-routing",
-  "version": "0.0.4-rc.0",
+  "version": "0.0.4-rc.1",
   "source": "index.html",
   "main": "script.js",
   "scripts": {
