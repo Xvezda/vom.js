@@ -1,5 +1,5 @@
 import ActionTypes from './action-types.js';
-import { html } from './helpers.js';
+import { html, bind } from './helpers.js';
 import { dispatcher, Reference } from './shared.js';
 import { patchNodes } from './diff.js';
 
@@ -33,8 +33,26 @@ export function render(component, parent) {
 }
 
 export function createRef() {
-  return new Reference({
+  const ref = new Reference({
     hash: getHash(),
     current: null,
   });
+
+  queueMicrotask(() => {
+    const selected = document.querySelector(`[data-ref="${ref}"]`);
+    ref.current = selected;
+  });
+
+  return ref;
+}
+
+export function forwardRef(component) {
+  return function (attrs) {
+    if (typeof attrs === 'undefined') {
+      attrs = {};
+    }
+    const ref = attrs.ref;
+
+    return html`${bind(component)(attrs, ref)}`;
+  };
 }

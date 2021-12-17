@@ -23,14 +23,14 @@ export function bind(component) {
   }
   const attrsMap = bindedMap.get(component);
   // TODO: Support template literal syntax
-  return function (attrs) {
+  return function (attrs, ref) {
     const found = [...attrsMap.entries()]
       .find(([k]) => deepEquals(k, attrs || {}));
 
     if (found) {
       return found[1];
     }
-    attrsMap.set(attrs, component.bind(null, attrs));
+    attrsMap.set(attrs, component.bind(null, attrs, ref));
     return attrsMap.get(attrs);
   };
 }
