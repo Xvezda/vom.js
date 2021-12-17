@@ -31,6 +31,23 @@ describe('html', () => {
     expect(childs.map(child => child.textContent.trim()))
       .toStrictEqual(items);
   });
+
+  const testRender = (component) => {
+    document.body.innerHTML = component();
+  };
+
+  const Link = ({ page, text }) => {
+    return html`
+      <a href="${page}">${text}</a>
+    `;
+  };
+
+  test('컴포넌트 렌더링', () => {
+    testRender(
+      bind(Link)({ page: 'https://www.google.com', text: 'Google' })
+    );
+    expect(document.body).toMatchSnapshot();
+  });
 });
 
 describe('bind', () => {
