@@ -121,13 +121,7 @@ export const useRef = stateful((initValue) => {
       ref,
     };
   }
-  const ref = states[idx].ref;
-
-  queueMicrotask(() => {
-    const selected = document.querySelector(`[data-ref="${ref}"]`);
-    ref.current = selected;
-  });
-  return ref;
+  return states[idx].ref;
 });
 
 
