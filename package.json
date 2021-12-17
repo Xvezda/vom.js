@@ -13,7 +13,7 @@
     "test": "jest --verbose --cache",
     "lint": "eslint --cache .",
     "define": "node scripts/defineSandbox.js",
-    "postversion": "yarn define",
+    "postversion": "yarn readme",
     "readme": "yarn define 'docs: update README (%h)'"
   },
   "devDependencies": {
