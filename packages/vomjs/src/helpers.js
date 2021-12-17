@@ -14,7 +14,7 @@ export function escapeEntities(html) {
   return placeholder.innerHTML;
 }
 
-const bindedMap = new Map();
+const bindedMap = new WeakMap();
 export function bind(component) {
   if (!bindedMap.has(component)) {
     const attrsMap = new Map();
