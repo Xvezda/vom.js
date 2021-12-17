@@ -1,4 +1,4 @@
-# :eyes: vom.js ![gzip size](https://img.badgesize.io/https://cdn.jsdelivr.net/npm/vomjs/dist/vom.js?label=gzip&compression=gzip)  ![npm version](https://img.shields.io/npm/v/vomjs)
+# :eyes: vom.js [![gzip size](https://img.badgesize.io/https://cdn.jsdelivr.net/npm/vomjs/dist/vom.js?label=gzip&compression=gzip)](https://cdn.jsdelivr.net/npm/vomjs/dist/vom.js) [![brotli size](https://img.badgesize.io/https://cdn.jsdelivr.net/npm/vomjs/dist/vom.js?label=brotli&compression=brotli)](https://cdn.jsdelivr.net/npm/vomjs/dist/vom.js) [![npm version](https://img.shields.io/npm/v/vomjs)](https://npmjs.com/package/vomjs)
 
 `vom.js`는 React-like API를 제공하는 UI 프레임워크입니다.
 
