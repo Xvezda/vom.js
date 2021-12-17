@@ -1,12 +1,9 @@
 import ActionTypes from './action-types.js';
-import { Template, dispatcher } from './shared.js';
+import { html } from './helpers.js';
+import { dispatcher } from './shared.js';
 import { patchNodes } from './diff.js';
 
 import { throttle } from '@vomjs/tools';
-
-export function html(strings, ...args) {
-  return new Template(strings, args);
-}
 
 const placeholder = document.createElement('div');
 function renderTo(element, render) {

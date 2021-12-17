@@ -1,4 +1,11 @@
+import { Template } from './shared.js';
+
 import { deepEquals } from '@vomjs/tools';
+
+
+export function html(strings, ...args) {
+  return new Template(strings, args);
+}
 
 const placeholder = document.createElement('div');
 export function escapeEntities(html) {
