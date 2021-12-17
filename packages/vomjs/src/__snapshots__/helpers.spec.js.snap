@@ -1,11 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`html 컴포넌트 렌더링 1`] = `
-<body>
-  <a
-    href="https://www.google.com"
-  >
-    Google
-  </a>
-</body>
+<a
+  href="https://www.google.com"
+>
+  Google
+</a>
 `;
