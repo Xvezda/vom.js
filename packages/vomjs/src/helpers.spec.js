@@ -32,8 +32,12 @@ describe('html', () => {
       .toStrictEqual(items);
   });
 
-  const testRender = (component) => {
-    document.body.innerHTML = component();
+  const testRender = {
+    create: function (component) {
+      document.body.innerHTML = component();
+      return this;
+    },
+    end: () => document.body.firstChild,
   };
 
   const Link = ({ page, text }) => {
@@ -43,10 +47,11 @@ describe('html', () => {
   };
 
   test('컴포넌트 렌더링', () => {
-    testRender(
-      bind(Link)({ page: 'https://www.google.com', text: 'Google' })
-    );
-    expect(document.body).toMatchSnapshot();
+    const component = testRender
+      .create(bind(Link)({ page: 'https://www.google.com', text: 'Google' }))
+      .end();
+
+    expect(component).toMatchSnapshot();
   });
 });
 
