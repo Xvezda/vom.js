@@ -5,9 +5,9 @@
 
 ## Demo
 
-- [**basic-routing**](https://94kwb.csb.app): [Sandbox](https://codesandbox.io/s/94kwb) | [Source](examples/basic-routing)
-- [**counter**](https://vlzfr.csb.app): [Sandbox](https://codesandbox.io/s/vlzfr) | [Source](examples/counter)
-- [**tic-tac-toe**](https://dh3f0.csb.app): [Sandbox](https://codesandbox.io/s/dh3f0) | [Source](examples/tic-tac-toe)
+- [**basic-routing**](https://wpbf9.csb.app): [Sandbox](https://codesandbox.io/s/wpbf9) | [Source](examples/basic-routing)
+- [**counter**](https://w25x9.csb.app): [Sandbox](https://codesandbox.io/s/w25x9) | [Source](examples/counter)
+- [**tic-tac-toe**](https://qpjbg.csb.app): [Sandbox](https://codesandbox.io/s/qpjbg) | [Source](examples/tic-tac-toe)
 
 ## Install
 
