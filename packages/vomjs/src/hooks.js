@@ -114,22 +114,18 @@ export const useEffect = stateful((didUpdate, deps) => {
 
 
 export const useRef = stateful((initValue) => {
-  let ref, refHash;
   if (!states[idx]) {
-    refHash = getHash();
-    ref = new Reference({
-      hash: refHash,
-      current: initValue,
-    });
     states[idx] = {
-      ref,
+      ref: new Reference({
+        hash: getHash(),
+        current: initValue,
+      }),
     };
-  } else {
-    ref = states[idx].ref;
-    refHash = String(ref);
   }
+  const ref = states[idx].ref;
+
   queueMicrotask(() => {
-    const selected = document.querySelector(`[data-ref="${refHash}"]`);
+    const selected = document.querySelector(`[data-ref="${ref}"]`);
     ref.current = selected;
   });
   return ref;

@@ -29,7 +29,7 @@ export class ReduceStore extends Store {
 }
 
 export const createStore = (reducer) => {
-  const dispatcher = new Dispatcher;
+  const dispatcher = new Dispatcher();
   class CreatedStore extends ReduceStore {
     dispatch(payload) {
       return dispatcher.dispatch(payload);
