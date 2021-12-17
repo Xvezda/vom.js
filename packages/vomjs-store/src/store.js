@@ -2,10 +2,9 @@ export default class Store {
   constructor(dispatcher) {
     this.$id = -1;
     this.$dispatcher = dispatcher;
-    this.$callbacks = new Map;
     this.$changed = false;
 
-    dispatcher.register(payload => this.onDispatch(payload));
+    dispatcher.register(this.onDispatch.bind(this));
   }
 
   addListener(callback) {

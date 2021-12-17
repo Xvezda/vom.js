@@ -1,34 +1,28 @@
+const kInitId = -1;
+
 export default class Dispatcher {
   constructor() {
-    this.$callbacks = new Map;
-    this.$pending = new Set;
-    this.$id = -1;
-    this._invokeId = -1;
+    this.$callbacks = new Map();
+    this.$pending = new Set();
+    this.$id = kInitId;
+    this._invokeId = kInitId;
     this._pendingPayload = undefined;
-
-    this._invokeCallback = this._invokeCallback.bind(this);
-    this._broadcast = this._broadcast.bind(this);
-    this.waitFor = this.waitFor.bind(this);
-    this.register = this.register.bind(this);
-    this.unregister = this.unregister.bind(this);
-    this.dispatch = this.dispatch.bind(this);
-    this.isDispatching = this.isDispatching.bind(this);
   }
 
   _invokeCallback(id) {
     this._invokeId = id;
     if (this.$pending.has(id)) {
-      this.waitFor([...this.$pending]);
+      this.waitFor(this.$pending);
     } else {
       this.$pending.add(id);
       this.$callbacks.get(id)(this._pendingPayload);
       this.$pending.delete(id);
     }
-    this._invokeId = -1;
+    this._invokeId = kInitId;
   }
 
   _broadcast() {
-    [...this.$callbacks.keys()].forEach(this._invokeCallback);
+    this.$callbacks.forEach((_, k) => this._invokeCallback(k));
   }
 
   register(callback) {
@@ -43,9 +37,10 @@ export default class Dispatcher {
 
   waitFor(ids) {
     this.$pending.add(this._invokeId);
-    const copy = new Set([...ids]);
-    while ([...copy].filter(id => typeof id !== 'undefined').map(id => this.$pending.has(id)).some(x => x)) {
-      [...copy].forEach(id => {
+
+    const copy = new Set(ids);
+    while (copy.map(this.$pending.has).some(x => x)) {
+      copy.forEach(id => {
         copy.delete(id);
         this.$pending.delete(id);
         this._invokeCallback(id);
@@ -63,6 +58,6 @@ export default class Dispatcher {
   }
 
   isDispatching() {
-    return this._invokeId !== -1;
+    return this._invokeId !== kInitId;
   }
 }

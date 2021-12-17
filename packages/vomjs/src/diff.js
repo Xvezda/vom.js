@@ -54,7 +54,7 @@ export function patchNode(parentNode, srcNode, dstNode) {
 }
 
 export function patchNodes(src, dst) {
-  const srcChildNodes = [...src.childNodes];
-  const dstChildNodes = [...dst.childNodes];
-  forEachAll(srcChildNodes, dstChildNodes, patchNode.bind(null, dst));
+  forEachAll(
+    [...src.childNodes], [...dst.childNodes], patchNode.bind(null, dst)
+  );
 }
