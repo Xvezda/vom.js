@@ -35,7 +35,7 @@ CDN
   - [x] `useCallback`
   - [x] `useMemo`
   - [x] `useRef`
-  - [ ] `useImperativeHandle`
-  - [ ] `useLayoutEffect`
+  - [x] `useImperativeHandle`
+  - [x] `useLayoutEffect`
   - [ ] `useDebugValue`
 - [ ] 서버사이드 렌더링 지원
