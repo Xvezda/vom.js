@@ -37,14 +37,15 @@ export function render(component, parent) {
 export function createRef() {
   const ref = new Reference({
     hash: getHash(),
-    current: null,
   });
+  ref.current = null;
 
   queueMicrotask(() => {
     const selected = document.querySelector(`[data-ref="${ref}"]`);
-    ref.current = selected;
+    if (selected) {
+      ref.current = selected;
+    }
   });
-
   return ref;
 }
 
