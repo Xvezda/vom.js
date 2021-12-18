@@ -2,8 +2,13 @@ import ActionTypes from './action-types.js';
 import { createRef } from './core.js';
 import {
   dispatcher,
-  getLatestFunction,
 } from './shared.js';
+import {
+  whenRender,
+  whenRenderSync,
+  getLatestFunction,
+  hasFunction,
+} from './helpers.js';
 
 import {
   deepEquals,
@@ -11,18 +16,11 @@ import {
 } from '@vomjs/tools';
 import { createStore } from '@vomjs/store';
 
-function whenRender(task) {
-  dispatcher.register(payload => {
-    if (payload.type === ActionTypes.RENDER) {
-      task();
-    }
-  });
-}
 
 let idx = -1;
 const states = [];
 whenRender(() => {
-  states.splice(idx, states.length-idx);
+  states.splice(idx + 1, states.length - (idx+1));
   idx = -1;
 });
 
@@ -81,67 +79,76 @@ export const useState = stateful((initState) => {
 });
 
 
-const cleanups = [];
-whenRender(() => {
-  cleanups.forEach(cleanUp => cleanUp());
-  cleanups.splice(0, cleanups.length);
+const cleanups = new Map();
+whenRenderSync(() => {
+  cleanups.forEach((cleanup, component) => {
+    if (!hasFunction(component)) {
+      cleanup();
+      cleanups.delete(component);
+    }
+  });
 });
 
-function whenUpdate(didUpdate) {
+function whenUpdate(didUpdate, idx) {
   const cleanup = didUpdate();
   if (typeof cleanup === 'function') {
-    cleanups.push(cleanup);
+    cleanups.set(states[idx].latest, () => {
+      cleanup();
+      delete states[idx].deps;
+    });
   }
 }
 
-const sideEffect = makeEffect => (didUpdate, deps) => {
+const sideEffect = makeEffect => stateful((didUpdate, deps) => {
+  const latest = getLatestFunction();
   const didCalled = typeof states[idx] !== 'undefined';
-  const needUpdate = !didCalled || typeof deps === 'undefined';
+  const needUpdate =
+    !didCalled ||
+    typeof deps === 'undefined' ||
+    states[idx].latest !== latest;
 
-  if (!states[idx]) {
-    states[idx] = {};
+  if (needUpdate) {
+    states[idx] = {
+      latest,
+    };
   }
 
-  if (!needUpdate && deepEquals(states[idx].deps, deps || []))
-    return;
+  if (!deepEquals(states[idx].deps, deps) && needUpdate) {
+    states[idx].deps = deps;
 
-  states[idx].deps = deps;
+    makeEffect(didUpdate, idx);
+  }
+});
 
-  makeEffect(didUpdate);
-};
-
-export const useEffect = stateful(
-  sideEffect((didUpdate) => {
-    requestAnimationFrame(() => {
-      queueMicrotask(() => {
-        whenUpdate(didUpdate);
-      });
+export const useEffect = sideEffect((didUpdate, idx) => {
+  requestAnimationFrame(() => {
+    queueMicrotask(() => {
+      whenUpdate(didUpdate, idx);
     });
-  })
-);
+  });
+});
 
-export const useLayoutEffect = stateful(
-  sideEffect((didUpdate) => {
-    const id = dispatcher.register(payload => {
-      if (payload.type === ActionTypes.RENDER_SYNC) {
-        whenUpdate(didUpdate);
-        dispatcher.unregister(id);
-      }
-    });
-  })
-);
+export const useLayoutEffect = sideEffect((didUpdate, idx) => {
+  const id = whenRenderSync(() => {
+    dispatcher.unregister(id);
+    whenUpdate(didUpdate, idx);
+  });
+});
 
 
 export const useRef = stateful((initValue) => {
+  const latest = getLatestFunction();
   if (!states[idx]) {
+    states[idx] = new WeakMap();
+  }
+
+  if (!states[idx].has(latest)) {
     const ref = createRef();
     ref.current = initValue;
 
-    states[idx] = {
-      ref,
-    };
+    states[idx].set(latest, ref);
   }
-  return states[idx].ref;
+  return states[idx].get(latest);
 });
 
 
@@ -178,7 +185,7 @@ export function useEventListener(ref, eventName, handler) {
 
     ref.current.addEventListener(eventName, handler);
     return () => ref.current.removeEventListener(eventName, handler);
-  });
+  }, [ref.current]);
 }
 
 

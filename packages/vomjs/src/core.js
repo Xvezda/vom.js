@@ -1,5 +1,5 @@
 import ActionTypes from './action-types.js';
-import { html, bind } from './helpers.js';
+import { html, bind, whenRender, whenRenderSync } from './helpers.js';
 import { dispatcher, Reference } from './shared.js';
 import { patchNodes } from './diff.js';
 
@@ -19,12 +19,7 @@ export function render(component, parent) {
 
   const initialize = () => {
     bindedRenderer();
-    const rerender = payload => {
-      if (payload.type === ActionTypes.RENDER) {
-        bindedRenderer();
-      }
-    };
-    dispatcher.register(throttle(rerender));
+    whenRender(throttle(() => bindedRenderer()));
   };
 
   if (document.readyState === 'loading') {
@@ -40,7 +35,7 @@ export function createRef() {
   });
   ref.current = null;
 
-  queueMicrotask(() => {
+  whenRenderSync(() => {
     const selected = document.querySelector(`[data-ref="${ref}"]`);
     if (selected) {
       ref.current = selected;

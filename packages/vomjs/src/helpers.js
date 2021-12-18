@@ -1,4 +1,5 @@
-import { Template } from './shared.js';
+import ActionTypes from './action-types.js';
+import { dispatcher, Reference, Template } from './shared.js';
 
 import { deepEquals } from '@vomjs/tools';
 
@@ -35,3 +36,45 @@ export function bind(component) {
     return attrsMap.get(attrs);
   };
 }
+
+export function doWhen(actType) {
+  return function (task) {
+    return dispatcher.register(payload => {
+      if (payload.type === actType) {
+        task();
+      }
+    });
+  };
+}
+export const whenRender = doWhen(ActionTypes.RENDER);
+export const whenRenderSync = doWhen(ActionTypes.RENDER_SYNC);
+
+const exprFunctions = new Set();
+whenRender(() => {
+  exprFunctions.clear();
+});
+
+export const getLatestFunction = () => {
+  return Array.from(exprFunctions.values()).pop();
+};
+export const hasFunction = func => exprFunctions.has(func);
+
+export function exprToString(expr) {
+  switch (true) {
+    case Array.isArray(expr):
+      return expr.map(e => exprToString(e)).join('');
+    case (
+      ['boolean', 'undefined'].includes(typeof expr) ||
+      expr === null
+    ):
+      return '';
+    case (expr instanceof Template || expr instanceof Reference):
+      return String(expr);
+    case (typeof expr === 'function'):
+      exprFunctions.add(expr);
+      return expr();
+    default:
+      return escapeEntities(String(expr));
+  }
+}
+
