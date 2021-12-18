@@ -1,14 +1,14 @@
 import { forEachAll } from '@vomjs/tools';
 
 export function patchAttributes(srcAttrs, dstAttrs) {
-  for (let i = 0, attrs = [...srcAttrs]; i < attrs.length; ++i) {
+  for (let i = 0, attrs = Array.from(srcAttrs); i < attrs.length; ++i) {
     const srcAttr = attrs[i];
     const dstAttr = dstAttrs.getNamedItem(attrs[i].name);
     if (dstAttr === null || dstAttr.value !== srcAttr.value) {
       dstAttrs.setNamedItem(srcAttr.cloneNode(false));
     }
   }
-  for (let i = 0, attrs = [...dstAttrs]; i < attrs.length; ++i) {
+  for (let i = 0, attrs = Array.from(dstAttrs); i < attrs.length; ++i) {
     const dstAttr = attrs[i];
     if (
       process.env.NODE_ENV !== 'production' &&
@@ -55,6 +55,8 @@ export function patchNode(parentNode, srcNode, dstNode) {
 
 export function patchNodes(src, dst) {
   forEachAll(
-    [...src.childNodes], [...dst.childNodes], patchNode.bind(null, dst)
+    Array.from(src.childNodes),
+    Array.from(dst.childNodes),
+    patchNode.bind(null, dst)
   );
 }

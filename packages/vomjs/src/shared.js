@@ -4,7 +4,7 @@ import { escapeEntities } from './helpers.js';
 export const dispatcher = new Dispatcher;
 
 const exprFunctions = new Set();
-export const getLatestFunction = () => [...exprFunctions].pop();
+export const getLatestFunction = () => Array.from(exprFunctions).pop();
 function exprToString(expr) {
   switch (true) {
     case Array.isArray(expr):
