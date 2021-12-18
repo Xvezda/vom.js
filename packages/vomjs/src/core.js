@@ -9,6 +9,8 @@ const placeholder = document.createElement('div');
 function renderTo(element, render) {
   placeholder.innerHTML = render();
   patchNodes(placeholder, element);
+
+  dispatcher.dispatch({ type: ActionTypes.RENDER_SYNC });
 }
 
 export function render(component, parent) {

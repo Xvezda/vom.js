@@ -86,7 +86,15 @@ whenRender(() => {
   cleanups.forEach(cleanUp => cleanUp());
   cleanups.splice(0, cleanups.length);
 });
-export const useEffect = stateful((didUpdate, deps) => {
+
+function whenUpdate(didUpdate) {
+  const cleanup = didUpdate();
+  if (typeof cleanup === 'function') {
+    cleanups.push(cleanup);
+  }
+}
+
+const sideEffect = makeEffect => (didUpdate, deps) => {
   const didCalled = typeof states[idx] !== 'undefined';
   const needUpdate = !didCalled || typeof deps === 'undefined';
 
@@ -94,22 +102,34 @@ export const useEffect = stateful((didUpdate, deps) => {
     states[idx] = {};
   }
 
-  if (deps) {
-    states[idx].deps = deps;
-  }
-
   if (!needUpdate && deepEquals(states[idx].deps, deps || []))
     return;
 
-  requestAnimationFrame(() => {
-    queueMicrotask(() => {
-      const cleanup = didUpdate();
-      if (typeof cleanup === 'function') {
-        cleanups.push(cleanup);
+  states[idx].deps = deps;
+
+  makeEffect(didUpdate);
+};
+
+export const useEffect = stateful(
+  sideEffect((didUpdate) => {
+    requestAnimationFrame(() => {
+      queueMicrotask(() => {
+        whenUpdate(didUpdate);
+      });
+    });
+  })
+);
+
+export const useLayoutEffect = stateful(
+  sideEffect((didUpdate) => {
+    const id = dispatcher.register(payload => {
+      if (payload.type === ActionTypes.RENDER_SYNC) {
+        whenUpdate(didUpdate);
+        dispatcher.unregister(id);
       }
     });
-  });
-});
+  })
+);
 
 
 export const useRef = stateful((initValue) => {
