@@ -133,15 +133,18 @@ export const useLayoutEffect = stateful(
 
 
 export const useRef = stateful((initValue) => {
+  const latest = getLatestFunction();
   if (!states[idx]) {
+    states[idx] = new WeakMap();
+  }
+
+  if (!states[idx].has(latest)) {
     const ref = createRef();
     ref.current = initValue;
 
-    states[idx] = {
-      ref,
-    };
+    states[idx].set(latest, ref);
   }
-  return states[idx].ref;
+  return states[idx].get(latest);
 });
 
 

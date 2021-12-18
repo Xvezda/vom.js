@@ -40,10 +40,12 @@ export function createRef() {
   });
   ref.current = null;
 
-  queueMicrotask(() => {
-    const selected = document.querySelector(`[data-ref="${ref}"]`);
-    if (selected) {
-      ref.current = selected;
+  dispatcher.register(payload => {
+    if (payload.type === ActionTypes.RENDER_SYNC) {
+      const selected = document.querySelector(`[data-ref="${ref}"]`);
+      if (selected) {
+        ref.current = selected;
+      }
     }
   });
   return ref;
