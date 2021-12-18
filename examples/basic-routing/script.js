@@ -5,6 +5,7 @@ import {
   useState,
   useEffect,
   useDelegation,
+  useCallback,
 } from 'vomjs';
 import {match} from '@vomjs/tools';
 
@@ -13,12 +14,11 @@ function Timer() {
 
   const intervalRef = useRef();
   useEffect(() => {
-    const id = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setCount(count => count + 1);
     }, 1000);
-    intervalRef.current = id;
     return () => clearTimeout(intervalRef.current);
-  });
+  }, []);
 
   return html`
     <div>timer count: ${count}</div>
@@ -35,7 +35,7 @@ function Counter() {
     return () => {
       buttonRef.current.removeEventListener('click', increment);
     };
-  });
+  }, []);
 
   return html`
     <div>
@@ -48,7 +48,7 @@ function Counter() {
 function Foo() {
   useEffect(() => {
     document.title = 'Foo page';
-  });
+  }, []);
 
   return html`
     <div>
@@ -61,7 +61,7 @@ function Foo() {
 function Bar() {
   useEffect(() => {
     document.title = 'Bar page';
-  });
+  }, []);
 
   return html`
     <div>
@@ -74,7 +74,8 @@ function Bar() {
 function Main() {
   useEffect(() => {
     document.title = 'Main page';
-  });
+  }, []);
+
   return html`
     <h1>Main</h1>
   `;
@@ -90,13 +91,15 @@ function App() {
     };
   }, []);
 
-  const linksRef = useDelegation('click', function onLinkClick(target, event) {
+  const clickLink = useCallback((target, event) => {
     event.preventDefault();
     const href = target.getAttribute('href');
 
     history.pushState({page: href}, '', href);
     setPage(href);
-  });
+  }, [history, page]);
+
+  const linksRef = useDelegation('click', clickLink);
 
   return html`
     <div>
