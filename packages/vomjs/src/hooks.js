@@ -89,7 +89,9 @@ export const useState = stateful((initState) => {
       states[curIdx].state = callIfFunction(newState, [
         states[curIdx].state
       ]);
-      dispatcher.dispatch({type: ActionTypes.RENDER});
+      queueMicrotask(() => {
+        dispatcher.dispatch({type: ActionTypes.RENDER});
+      });
     }
   ];
 });
@@ -116,10 +118,11 @@ const sideEffect = makeEffect => (didUpdate, deps) => {
 
 export const useEffect = stateful(
   sideEffect((didUpdate, state) => {
-    requestAnimationFrame(() => {
+    const id = whenRenderSync(() => {
       queueMicrotask(() => {
         whenUpdate(didUpdate, state);
       });
+      dispatcher.unregister(id);
     });
   })
 );
