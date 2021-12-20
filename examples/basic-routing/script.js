@@ -4,10 +4,12 @@ import {
   useRef,
   useState,
   useEffect,
+  useEventListener,
   useDelegation,
-  useCallback,
 } from 'vomjs';
-import {match} from '@vomjs/tools';
+
+import { match } from '@vomjs/tools';
+
 
 function Timer() {
   const [count, setCount] = useState(0);
@@ -17,7 +19,9 @@ function Timer() {
     intervalRef.current = setInterval(() => {
       setCount(count => count + 1);
     }, 1000);
-    return () => clearTimeout(intervalRef.current);
+    return () => {
+      clearTimeout(intervalRef.current);
+    };
   }, []);
 
   return html`
@@ -28,13 +32,8 @@ function Timer() {
 function Counter() {
   const [count, setCount] = useState(0);
 
-  const buttonRef = useRef();
-  useEffect(() => {
-    const increment = () => setCount(count => count + 1);
-    buttonRef.current.addEventListener('click', increment);
-    return () => {
-      buttonRef.current.removeEventListener('click', increment);
-    };
+  const buttonRef = useEventListener('click', () => {
+    setCount(count => count + 1);
   }, []);
 
   return html`
@@ -86,32 +85,35 @@ function App() {
 
   useEffect(() => {
     window.onpopstate = function (event) {
-      const state = event.state || {page: '/'};
-      setPage(state.page);
+      const { page } = event.state || {page: '/'};
+      setPage(page);
     };
   }, []);
 
-  const clickLink = useCallback((target, event) => {
+  const ref = useDelegation('click', (target, event) => {
     event.preventDefault();
+
     const href = target.getAttribute('href');
 
-    history.pushState({page: href}, '', href);
-    setPage(href);
-  }, [history, page]);
-
-  const linksRef = useDelegation('click', clickLink);
+    setPage(prev => {
+      if (prev !== href) {
+        history.pushState({page: href}, '', href);
+      }
+      return href;
+    });
+  }, []);
 
   return html`
     <div>
-      <ul data-ref="${linksRef}">
+      <ul data-ref="${ref}">
         <li>
-          <a href="/" data-delegate="${linksRef}">Main</a>
+          <a href="/" data-delegate="${ref}">Main</a>
         </li>
         <li>
-          <a href="/foo" data-delegate="${linksRef}">Foo</a>
+          <a href="/foo" data-delegate="${ref}">Foo</a>
         </li>
         <li>
-          <a href="/bar" data-delegate="${linksRef}">Bar</a>
+          <a href="/bar" data-delegate="${ref}">Bar</a>
         </li>
       </ul>
       ${match(page)

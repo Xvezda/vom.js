@@ -42,7 +42,7 @@ function Counter({ initialCount }) {
         dispatch({type: target.dataset.action});
         break;
     }
-  });
+  }, [state.count]);
 
   const createButton = (action, text) => html`
     <button

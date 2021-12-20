@@ -173,27 +173,30 @@ export const useImperativeHandle = (ref, createHandle, deps) => {
 };
 
 
-export function useEventListener(ref, eventName, handler) {
-  useEffect(() => {
-    if (!ref.current)
-      return;
+export function useEventListener(eventName, handler, deps) {
+  const ref = useRef();
+  const listener = useCallback(handler, deps);
 
-    ref.current.addEventListener(eventName, handler);
-    return () => ref.current.removeEventListener(eventName, handler);
-  });
+  useEffect(() => {
+    const eventTarget = ref.current;
+
+    eventTarget.addEventListener(eventName, listener);
+    return () => {
+      eventTarget.removeEventListener(eventName, listener);
+    };
+  }, deps || []);
+
+  return ref;
 }
 
-
-export function useDelegation(eventName, handler) {
-  const ref = useRef();
-  const delegate = (event) => {
-    const selector = `[data-delegate="${ref}"]`;
+export function useDelegation(eventName, handler, deps) {
+  const listener = useCallback((event) => {
+    const selector = '[data-delegate]';
     const target = event.target.closest(selector);
     if (!target)
       return;
 
     handler(target, event);
-  };
-  useEventListener(ref, eventName, delegate);
-  return ref;
+  }, deps);
+  return useEventListener(eventName, listener, deps);
 }
