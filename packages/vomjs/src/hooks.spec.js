@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { render } from 'vomjs';
-import { useState } from './hooks.js';
+import { useState, useEffect } from './hooks.js';
 
 
 const fps = 60;
@@ -75,5 +75,24 @@ describe('useState', () => {
 
     expect(mock).toBeCalledTimes(1);
     expect(document.body.innerHTML.trim()).toBe('foo');
+  });
+});
+
+describe('useEffect', () => {
+  test('effect 정리', () => {
+    const clean = jest.fn();
+    const effect = jest.fn(() => clean);
+
+    const App = () => {
+      useEffect(effect);
+      return '';
+    };
+    render(App, document.body);
+    expect(effect).toBeCalledTimes(1);
+    expect(clean).not.toBeCalled();
+
+    render(App, document.body);
+    expect(effect).toBeCalledTimes(2);
+    expect(clean).toBeCalledTimes(1);
   });
 });
