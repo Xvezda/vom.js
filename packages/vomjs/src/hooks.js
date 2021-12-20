@@ -11,13 +11,16 @@ import {
 } from '@vomjs/tools';
 import { createStore } from '@vomjs/store';
 
-function whenRender(task) {
-  dispatcher.register(payload => {
-    if (payload.type === ActionTypes.RENDER) {
-      task();
+const doWhen = type => task => {
+  return dispatcher.register(payload => {
+    if (payload.type === type) {
+      task(payload);
     }
   });
-}
+};
+
+const whenRender = doWhen(ActionTypes.RENDER);
+const whenRenderSync = doWhen(ActionTypes.RENDER_SYNC);
 
 let idx = -1;
 const states = [];
@@ -122,11 +125,9 @@ export const useEffect = stateful(
 
 export const useLayoutEffect = stateful(
   sideEffect((didUpdate) => {
-    const id = dispatcher.register(payload => {
-      if (payload.type === ActionTypes.RENDER_SYNC) {
-        whenUpdate(didUpdate);
-        dispatcher.unregister(id);
-      }
+    const id = whenRenderSync(() => {
+      whenUpdate(didUpdate);
+      dispatcher.unregister(id);
     });
   })
 );
