@@ -55,7 +55,11 @@
           "rootMode": "upward"
         }
       ]
-    }
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
   },
   "private": true,
   "lint-staged": {
