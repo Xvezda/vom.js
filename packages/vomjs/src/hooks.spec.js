@@ -63,4 +63,17 @@ describe('useState', () => {
     render(App, document.body);
     expect(document.body.innerHTML.trim()).toBe('bar');
   });
+
+  test('지연 초기 state', () => {
+    const mock = jest.fn(() => 'foo');
+
+    const App = () => {
+      const [state] = useState(mock);
+      return state;
+    };
+    render(App, document.body);
+
+    expect(mock).toBeCalledTimes(1);
+    expect(document.body.innerHTML.trim()).toBe('foo');
+  });
 });
