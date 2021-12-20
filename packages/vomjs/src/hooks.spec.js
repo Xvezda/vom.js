@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { render, bind } from 'vomjs';
-import { useState, useEffect } from './hooks.js';
+import { useState, useEffect, useLayoutEffect } from './hooks.js';
 
 
 const fps = 60;
@@ -113,5 +113,40 @@ describe('useEffect', () => {
     render(bind(App)({flag: false}), document.body);
     expect(effect).toBeCalledTimes(2);
     expect(clean).toBeCalledTimes(1);
+  });
+});
+
+describe('useLayoutEffect', () => {
+  test('동기적으로 처리', () => {
+    const App = () => {
+      const [state, setState] = useState('foo');
+
+      useLayoutEffect(() => {
+        setState('bar');
+      }, []);
+
+      return state;
+    };
+
+    render(App, document.body);
+    expect(document.body.innerHTML.trim()).toBe('bar');
+  });
+
+  test('effect 타이밍', () => {
+    const mock = jest.fn();
+    const App = () => {
+      useEffect(() => {
+        mock('effect');
+      });
+
+      useLayoutEffect(() => {
+        mock('layout effect');
+      });
+      return '';
+    };
+    render(App, document.body);
+
+    expect(mock).nthCalledWith(1, 'layout effect');
+    expect(mock).nthCalledWith(2, 'effect');
   });
 });
