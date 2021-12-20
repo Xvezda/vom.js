@@ -4,11 +4,14 @@
 import { debounce, throttle } from './optimize.js';
 
 
+const fps = 60;
+const interval = Math.floor(1000 / fps);
+
 jest.useFakeTimers();
 
 jest
   .spyOn(window, 'requestAnimationFrame')
-  .mockImplementation(callback => setTimeout(callback, 16));
+  .mockImplementation(callback => setTimeout(callback, interval));
 
 test('debounce', () => {
   const arr = [1, 2, 3];
