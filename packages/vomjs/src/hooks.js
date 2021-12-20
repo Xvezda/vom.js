@@ -184,19 +184,26 @@ export function useEventListener(eventName, handler, deps) {
     return () => {
       eventTarget.removeEventListener(eventName, listener);
     };
-  }, deps || []);
+  }, deps);
 
   return ref;
 }
 
 export function useDelegation(eventName, handler, deps) {
+  const delegateRef = useRef();
   const listener = useCallback((event) => {
     const selector = '[data-delegate]';
     const target = event.target.closest(selector);
-    if (!target)
+    if (!target || target.dataset.delegate !== String(delegateRef.current))
       return;
 
     handler(target, event);
   }, deps);
-  return useEventListener(eventName, listener, deps);
+
+  const ref = useEventListener(eventName, listener, deps);
+  useLayoutEffect(() => {
+    delegateRef.current = ref;
+  });
+
+  return ref;
 }
