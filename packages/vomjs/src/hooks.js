@@ -170,7 +170,7 @@ export const useReducer = stateful((reducer, initialArg, init) => {
 
 
 export const useImperativeHandle = (ref, createHandle, deps) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref.current = createHandle();
   }, deps);
 };
