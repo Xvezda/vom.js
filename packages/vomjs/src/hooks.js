@@ -25,25 +25,36 @@ const whenRenderSync = doWhen(ActionTypes.RENDER_SYNC);
 let idx = -1;
 const states = [];
 whenRender(() => {
-  states.splice(idx, states.length-idx);
   idx = -1;
+});
+
+whenRenderSync(() => {
+  states
+    .splice(idx + 1, states.length - (idx+1))
+    .forEach(({ cleanup }) => callIfFunction(cleanup));
 });
 
 function stateful(hook) {
   return function (...args) {
     ++idx;
+
+    const latest = getLatestFunction();
+    if (
+      !states[idx] ||
+      states[idx].component !== latest
+    ) {
+      if (states[idx] && typeof states[idx].cleanup === 'function') {
+        states[idx].cleanup();
+      }
+      states[idx] = {};
+    }
+    states[idx].component = latest;
+
     return hook(...args);
   };
 }
 
 export const useMemo = stateful((callback, deps) => {
-  if (!states[idx]) {
-    states[idx] = {
-      callback,
-      deps,
-    };
-  }
-
   if (
     typeof deps === 'undefined' ||
     !deepEquals(states[idx].deps, deps) ||
@@ -51,6 +62,8 @@ export const useMemo = stateful((callback, deps) => {
   ) {
     states[idx].memo = callback();
   }
+  states[idx].deps = deps;
+
   return states[idx].memo;
 });
 
@@ -61,18 +74,16 @@ export const useCallback =
 
 export const useState = stateful((initState) => {
   const latest = getLatestFunction();
-
-  if (!states[idx] || states[idx].component !== latest) {
-    states[idx] = {
-      component: latest,
-      state: callIfFunction(initState),
-    };
-  }
   const curIdx = idx;
+
+  if (!states[curIdx].state || states[curIdx].component !== latest) {
+    states[curIdx].state = callIfFunction(initState);
+  }
+
   return [
     states[curIdx].state,
     function setState(newState) {
-      if (states[curIdx].component !== latest) {
+      if (!states[curIdx] || states[curIdx].component !== latest) {
         return;
       }
       states[curIdx].state = callIfFunction(newState, [
@@ -83,50 +94,40 @@ export const useState = stateful((initState) => {
   ];
 });
 
-
-const cleanups = [];
-whenRender(() => {
-  cleanups.forEach(cleanUp => cleanUp());
-  cleanups.splice(0, cleanups.length);
-});
-
-function whenUpdate(didUpdate) {
+function whenUpdate(didUpdate, state) {
   const cleanup = didUpdate();
   if (typeof cleanup === 'function') {
-    cleanups.push(cleanup);
+    state.cleanup = cleanup;
   }
 }
 
 const sideEffect = makeEffect => (didUpdate, deps) => {
-  const didCalled = typeof states[idx] !== 'undefined';
-  const needUpdate = !didCalled || typeof deps === 'undefined';
-
-  if (!states[idx]) {
-    states[idx] = {};
-  }
-
-  if (!needUpdate && deepEquals(states[idx].deps, deps || []))
+  if (
+    typeof deps !== 'undefined' &&
+    deepEquals(states[idx].deps, deps)
+  ) {
     return;
-
+  }
+  callIfFunction(states[idx].cleanup);
   states[idx].deps = deps;
 
-  makeEffect(didUpdate);
+  makeEffect(didUpdate, states[idx]);
 };
 
 export const useEffect = stateful(
-  sideEffect((didUpdate) => {
+  sideEffect((didUpdate, state) => {
     requestAnimationFrame(() => {
       queueMicrotask(() => {
-        whenUpdate(didUpdate);
+        whenUpdate(didUpdate, state);
       });
     });
   })
 );
 
 export const useLayoutEffect = stateful(
-  sideEffect((didUpdate) => {
+  sideEffect((didUpdate, state) => {
     const id = whenRenderSync(() => {
-      whenUpdate(didUpdate);
+      whenUpdate(didUpdate, state);
       dispatcher.unregister(id);
     });
   })
@@ -134,18 +135,13 @@ export const useLayoutEffect = stateful(
 
 
 export const useRef = stateful((initValue) => {
-  const latest = getLatestFunction();
-  if (!states[idx]) {
-    states[idx] = new WeakMap();
-  }
-
-  if (!states[idx].has(latest)) {
+  if (!states[idx].ref) {
     const ref = createRef();
     ref.current = initValue;
 
-    states[idx].set(latest, ref);
+    states[idx].ref = ref;
   }
-  return states[idx].get(latest);
+  return states[idx].ref;
 });
 
 
@@ -154,16 +150,18 @@ export const useReducer = stateful((reducer, initialArg, init) => {
   const lazyInit = () => init ? init(initialArg) : initialArg;
   const [state, setState] = useState(lazyInit);
 
-  if (!states[curIdx]) {
-    const store = createStore(() => state);
-    states[curIdx] = store;
+  let store = states[curIdx].store;
+  if (!store) {
+    store = createStore(() => state);
     store.reduce = reducer;
-    store.subscribe(() => setState(states[curIdx].getState()));
+    store.subscribe(() => setState(store.getState()));
+
+    states[curIdx].store = store;
   }
 
   return [
-    state,
-    states[curIdx].dispatch.bind(states[curIdx]),
+    store.getState(),
+    store.dispatch.bind(store),
   ];
 });
 
