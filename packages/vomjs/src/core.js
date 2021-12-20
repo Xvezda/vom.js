@@ -13,18 +13,23 @@ function renderTo(element, render) {
   dispatcher.dispatch({ type: ActionTypes.RENDER_SYNC });
 }
 
+const mounts = new Map();
 export function render(component, parent) {
   const bindedRenderer =
     renderTo.bind(null, parent, () => html`${component}`);
 
   const initialize = () => {
-    bindedRenderer();
+    dispatcher.unregister(mounts.get(parent));
     const rerender = payload => {
       if (payload.type === ActionTypes.RENDER) {
         bindedRenderer();
       }
     };
-    dispatcher.register(throttle(rerender));
+    const throttled = throttle(rerender);
+    const id = dispatcher.register(throttled);
+    mounts.set(parent, id);
+
+    dispatcher.dispatch({ type: ActionTypes.RENDER });
   };
 
   if (document.readyState === 'loading') {
