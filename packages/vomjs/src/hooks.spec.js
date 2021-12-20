@@ -2,7 +2,12 @@
  * @jest-environment jsdom
  */
 import { render, bind } from 'vomjs';
-import { useState, useEffect, useLayoutEffect } from './hooks.js';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+} from './hooks.js';
 
 
 const fps = 60;
@@ -148,5 +153,24 @@ describe('useLayoutEffect', () => {
 
     expect(mock).nthCalledWith(1, 'layout effect');
     expect(mock).nthCalledWith(2, 'effect');
+  });
+});
+
+describe('useMemo', () => {
+  test('메모이제이션', () => {
+    const mock = jest.fn(value => value);
+    const App = (props) => {
+      const memoized = useMemo(() => mock(props.value), [props.value]);
+      return memoized;
+    };
+    render(bind(App)({value: 'foo'}), document.body);
+    render(bind(App)({value: 'foo'}), document.body);
+
+    expect(mock).toBeCalledTimes(1);
+    expect(document.body.innerHTML.trim()).toBe('foo');
+
+    render(bind(App)({value: 'bar'}), document.body);
+    expect(mock).toBeCalledTimes(2);
+    expect(document.body.innerHTML.trim()).toBe('bar');
   });
 });
