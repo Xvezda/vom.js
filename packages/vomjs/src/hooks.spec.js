@@ -1,12 +1,13 @@
 /**
  * @jest-environment jsdom
  */
-import { render, bind } from 'vomjs';
+import { render, html, bind } from 'vomjs';
 import {
   useState,
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
 } from './hooks.js';
 
 
@@ -172,5 +173,61 @@ describe('useMemo', () => {
     render(bind(App)({value: 'bar'}), document.body);
     expect(mock).toBeCalledTimes(2);
     expect(document.body.innerHTML.trim()).toBe('bar');
+  });
+});
+
+describe('useRef', () => {
+  test('초기값 설정', () => {
+    const App = () => {
+      const ref = useRef('foo');
+
+      return ref.current;
+    };
+    render(App, document.body);
+
+    expect(document.body.innerHTML.trim()).toBe('foo');
+  });
+
+  test('DOM 참조', () => {
+    const capture = jest.fn();
+    const App = () => {
+      const ref = useRef();
+
+      useEffect(() => {
+        capture(ref.current);
+      });
+
+      return html`
+        <div>
+          <p>nested something</p>
+          <a
+            id="link"
+            data-ref="${ref}"
+            href="https://github.com/"
+          >
+            go to GitHub
+          </a>
+        </div>
+      `;
+    };
+    render(App, document.body);
+
+    const linkEl = document.getElementById('link');
+    expect(capture.mock.calls[0]).toEqual([linkEl]);
+  });
+
+  test('리렌더링 없음', () => {
+    const mock = jest.fn();
+    const App = () => {
+      const ref = useRef('foo');
+
+      mock();
+      if (ref.current === 'foo') {
+        ref.current = 'bar';
+      }
+      return '';
+    };
+    render(App, document.body);
+    expect(mock).toBeCalledTimes(1);
   });
 });
