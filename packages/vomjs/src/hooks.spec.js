@@ -1,7 +1,12 @@
 /**
  * @jest-environment jsdom
  */
-import { render, html, bind } from 'vomjs';
+import {
+  render,
+  html,
+  bind,
+  forwardRef
+} from 'vomjs';
 import {
   useState,
   useEffect,
@@ -10,6 +15,7 @@ import {
   useRef,
   useReducer,
   useCallback,
+  useImperativeHandle,
 } from './hooks.js';
 
 
@@ -346,5 +352,33 @@ describe('useCallback', () => {
     const captured = calls.map(args => args[0]);
 
     expect(captured[0]).not.toBe(captured[1]);
+  });
+});
+
+describe('useImperativeHandle', () => {
+  test('노출 인스턴스 사용자화', () => {
+    const capture = jest.fn();
+
+    const Child = forwardRef((props, ref) => {
+      useImperativeHandle(ref, () => ({
+        foo: () => 'bar',
+      }));
+      return '';
+    });
+
+    const App = () => {
+      const ref = useRef();
+
+      useEffect(() => {
+        capture(ref.current.foo());
+      });
+
+      return html`
+        ${bind(Child)({ ref })}
+      `;
+    };
+    render(App, document.body);
+
+    expect(capture).toBeCalledWith('bar');
   });
 });
