@@ -43,6 +43,11 @@
     "examples/*"
   ],
   "jest": {
+    "rootDir": ".",
+    "moduleNameMapper": {
+      "^vomjs$": "<rootDir>/packages/vomjs/src/",
+      "^@vomjs/(.*)$": "<rootDir>/packages/vomjs-$1/src/"
+    },
     "transform": {
       "^.+\\.js$": [
         "babel-jest",
