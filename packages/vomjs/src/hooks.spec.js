@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
   useReducer,
+  useCallback,
 } from './hooks.js';
 
 
@@ -304,3 +305,46 @@ describe('useReducer', () => {
   });
 });
 
+describe('useCallback', () => {
+  test('같은 함수를 반환', () => {
+    const capture = jest.fn();
+    const callback = () => {};
+    const App = () => {
+      const cb = useCallback(callback, []);
+      capture(cb);
+
+      return '';
+    };
+    render(App, document.body);
+    render(App, document.body);
+
+    const calls = capture.mock.calls;
+    const captured = calls.map(args => args[0]);
+    expect(captured[0]).toStrictEqual(captured[1]);
+  });
+
+  test('의존성 변경 반영', () => {
+    const capture = jest.fn();
+    const App = () => {
+      const [flag, setFlag] = useState(false);
+
+      const cb = useCallback(() => {
+        capture(flag);
+      }, [flag]);
+
+      if (!flag) {
+        setFlag(true);
+      }
+      cb();
+
+      return '';
+    };
+    render(App, document.body);
+    render(App, document.body);
+
+    const calls = capture.mock.calls;
+    const captured = calls.map(args => args[0]);
+
+    expect(captured[0]).not.toBe(captured[1]);
+  });
+});
