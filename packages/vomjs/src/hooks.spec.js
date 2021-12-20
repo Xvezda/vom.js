@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useReducer,
 } from './hooks.js';
 
 
@@ -231,3 +232,75 @@ describe('useRef', () => {
     expect(mock).toBeCalledTimes(1);
   });
 });
+
+describe('useReducer', () => {
+  const initialState = {count: 0};
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      default:
+        throw new Error();
+    }
+  }
+
+  const App = () => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const incBtnRef = useRef();
+    const decBtnRef = useRef();
+
+    useEffect(() => {
+      const incBtn = incBtnRef.current;
+      const decBtn = decBtnRef.current;
+
+      const increment = () => dispatch({ type: 'increment' });
+      const decrement = () => dispatch({ type: 'decrement' });
+
+      incBtn.addEventListener('click', increment);
+      decBtn.addEventListener('click', decrement);
+
+      return () => {
+        incBtn.removeEventListener('click', increment);
+        decBtn.removeEventListener('click', decrement);
+      };
+    });
+
+    return html`
+      <div>
+        <p id="count">${state.count}</p>
+        <div>
+          <button
+            id="increment"
+            data-ref="${incBtnRef}">
+            +
+          </button>
+          <button
+            id="decrement"
+            data-ref="${decBtnRef}">
+            -
+          </button>
+        </div>
+      </div>
+    `;
+  };
+
+  test('카운터 증감 예제', () => {
+    const getCount = () =>
+      parseInt(document.getElementById('count').textContent);
+
+    render(App, document.body);
+    expect(getCount()).toBe(0);
+
+    document.getElementById('increment').click();
+    render(App, document.body);
+    expect(getCount()).toBe(1);
+
+    document.getElementById('decrement').click();
+    render(App, document.body);
+    expect(getCount()).toBe(0);
+  });
+});
+
