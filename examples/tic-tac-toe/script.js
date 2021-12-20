@@ -46,21 +46,16 @@ function Square(props) {
 }
 
 function Board(props) {
-  const boardRef = useDelegation(
-    'click',
-    target => props.onClick(parseInt(target.dataset.idx))
-  );
-
   const renderSquare = (idx) => {
     return bind(Square)({
-      delegate: boardRef,
+      delegate: props.boardRef,
       idx,
       value: props.squares[idx],
     });
   };
 
   return html`
-    <div data-ref="${boardRef}">
+    <div data-ref="${props.boardRef}">
       <div class="board-row">
         ${renderSquare(0)}
         ${renderSquare(1)}
@@ -134,7 +129,8 @@ function Game() {
 
   const movesRef = useDelegation(
     'click',
-    target => jumpTo(parseInt(target.dataset.move))
+    target => jumpTo(parseInt(target.dataset.move)),
+    []
   );
 
   const moves = history.map((step, move) => {
@@ -152,12 +148,18 @@ function Game() {
     `;
   });
 
+  const boardRef = useDelegation(
+    'click',
+    target => handleClick(parseInt(target.dataset.idx)),
+    [handleClick]
+  );
+
   return html`
     <div class="game">
       <div class="game-board">
         ${bind(Board)({
+          boardRef,
           squares: current.squares,
-          onClick: handleClick,
         })}
       </div>
       <div class="game-info">
