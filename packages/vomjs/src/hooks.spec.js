@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { render } from 'vomjs';
+import { render, bind } from 'vomjs';
 import { useState, useEffect } from './hooks.js';
 
 
@@ -92,6 +92,25 @@ describe('useEffect', () => {
     expect(clean).not.toBeCalled();
 
     render(App, document.body);
+    expect(effect).toBeCalledTimes(2);
+    expect(clean).toBeCalledTimes(1);
+  });
+
+  test('조건부 effect 발생', () => {
+    const clean = jest.fn();
+    const effect = jest.fn(() => clean);
+
+    const App = (props) => {
+      useEffect(effect, [props.flag]);
+      return '';
+    };
+    render(bind(App)({flag: true}), document.body);
+    render(bind(App)({flag: true}), document.body);
+
+    expect(effect).toBeCalledTimes(1);
+    expect(clean).not.toBeCalled();
+
+    render(bind(App)({flag: false}), document.body);
     expect(effect).toBeCalledTimes(2);
     expect(clean).toBeCalledTimes(1);
   });
