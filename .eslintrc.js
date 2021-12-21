@@ -5,7 +5,7 @@ module.exports = {
     'es2021': true,
     'jest': true
   },
-  'extends': 'eslint:recommended',
+  'extends': ['eslint:recommended', 'plugin:compat/recommended'],
   'parserOptions': {
     'ecmaVersion': 13,
     'sourceType': 'module'
@@ -37,5 +37,13 @@ module.exports = {
         'ignoreRegExpLiterals': true,
       }
     ]
-  }
+  },
+  'overrides': [
+    {
+      'files': ['scripts/**/*.js', '*.spec.js'],
+      'rules': {
+        'compat/compat': 'off',
+      },
+    },
+  ]
 };
