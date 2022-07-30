@@ -35,11 +35,11 @@
   "resolutions": {
     "**/json-schema": "^0.4.0",
     "**/glob-parent": "^5.1.2",
-    "**/postcss": "^7.0.36",
+    "**/postcss": "^8.2.13",
     "**/nth-check": "^2.0.1",
     "**/ansi-regex": "^5.0.1",
-    "**/postcss": "^8.2.13",
-    "**/node-forge": "^1.0.0"
+    "**/node-forge": "^1.0.0",
+    "**/parse-path": "^6.0.0"
   },
   "workspaces": [
     "packages/*",
