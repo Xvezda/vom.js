@@ -90,10 +90,10 @@ importers:
   packages/vomjs:
     dependencies:
       '@vomjs/store':
-        specifier: ^0.0.4
+        specifier: workspace:*
         version: link:../vomjs-store
       '@vomjs/tools':
-        specifier: ^0.1.0-beta.0
+        specifier: workspace:*
         version: link:../vomjs-tools
     devDependencies:
       babel-loader:
