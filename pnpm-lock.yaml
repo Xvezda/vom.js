@@ -81,8 +81,8 @@ importers:
         version: link:../../packages/vomjs
     devDependencies:
       core-js:
-        specifier: ^3.18.1
-        version: 3.20.0
+        specifier: ^3.34.0
+        version: 3.34.0
       parcel:
         specifier: ^2.10.3
         version: 2.10.3(typescript@4.5.4)
@@ -4053,6 +4053,11 @@ packages:
   /core-js@3.20.0:
     resolution: {integrity: sha512-KjbKU7UEfg4YPpskMtMXPhUKn7m/1OdTHTVjy09ScR2LVaoUXe8Jh0UdvN2EKUR6iKTJph52SJP95mAB0MnVLQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+    requiresBuild: true
+    dev: true
+
+  /core-js@3.34.0:
+    resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
     requiresBuild: true
     dev: true
 
