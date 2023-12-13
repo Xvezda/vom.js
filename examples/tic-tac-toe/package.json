@@ -8,7 +8,7 @@
   },
   "private": true,
   "devDependencies": {
-    "core-js": "^3.34.0",
+    "core-js": "^3.18.1",
     "parcel": "^2.10.3"
   },
   "dependencies": {
