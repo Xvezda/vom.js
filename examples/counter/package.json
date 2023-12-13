@@ -2,7 +2,6 @@
   "name": "counter",
   "version": "0.1.0-alpha.0",
   "source": "index.html",
-  "main": "script.js",
   "scripts": {
     "start": "parcel",
     "build": "parcel build"
@@ -12,6 +11,6 @@
     "parcel": "latest"
   },
   "dependencies": {
-    "vomjs": "latest"
+    "vomjs": "workspace:*"
   }
 }

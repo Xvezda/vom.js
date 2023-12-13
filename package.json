@@ -6,15 +6,14 @@
     "url": "https://xvezda.com/"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "prepare": "husky install",
-    "prepublishOnly": "yarn build",
-    "build": "yarn workspace vomjs build",
+    "prepublishOnly": "pnpm run build",
+    "build": "turbo build",
     "test": "jest --verbose --cache",
     "lint": "eslint --cache .",
     "define": "node scripts/defineSandbox.js",
-    "postversion": "yarn readme",
-    "readme": "yarn define 'docs: update README (%h)'"
+    "postversion": "pnpm run readme",
+    "readme": "pnpm run define 'docs: update README (%h)'"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -29,17 +28,8 @@
     "gh-pages": "^3.2.3",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
-    "lerna": "^4.0.0",
-    "lint-staged": ">=10"
-  },
-  "resolutions": {
-    "**/json-schema": "^0.4.0",
-    "**/glob-parent": "^5.1.2",
-    "**/postcss": "^8.2.13",
-    "**/nth-check": "^2.0.1",
-    "**/ansi-regex": "^5.0.1",
-    "**/node-forge": "^1.0.0",
-    "**/parse-path": "^6.0.0"
+    "lint-staged": ">=10",
+    "turbo": "^1.11.2"
   },
   "workspaces": [
     "packages/*",
