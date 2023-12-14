@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "devDependencies": {
     "@babel/core": "^7.15.5",
-    "babel-jest": "^27.2.0",
     "vitest": "^1.0.4"
   },
   "scripts": {
