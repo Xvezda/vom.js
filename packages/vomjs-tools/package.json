@@ -15,6 +15,7 @@
   "license": "MIT",
   "sideEffects": false,
   "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.4",
     "happy-dom": "^12.10.3",
     "vitest": "^1.0.4"
   }
