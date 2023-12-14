@@ -4,12 +4,19 @@
   "description": "자주 쓰이는 코드를 chaining 방식으로 이용할 수 있도록 제공하는 도구모음 패키지",
   "type": "module",
   "main": "src/index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "vitest run"
+  },
   "author": {
     "name": "Xvezda",
     "email": "xvezda@naver.com",
     "url": "https://xvezda.com/"
   },
   "license": "MIT",
-  "sideEffects": false
+  "sideEffects": false,
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.4",
+    "happy-dom": "^12.10.3",
+    "vitest": "^1.0.4"
+  }
 }

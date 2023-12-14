@@ -1,6 +1,7 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
+import { vi, describe, test, expect } from 'vitest';
 import { select } from './selector';
 
 describe('select', () => {
@@ -17,7 +18,7 @@ describe('select', () => {
   document.body.appendChild(button);
 
   test('on and off', () => {
-    const mock = jest.fn();
+    const mock = vi.fn();
     const selected = select(button).on('click', mock);
 
     expect(selected.context()).toBe(button);

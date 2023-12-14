@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { deepEquals } from './common.js';
 
 describe('deepEquals', () => {

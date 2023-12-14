@@ -4,6 +4,10 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependOn": ["build"],
+      "inputs": ["**/*.spec.*", "**/*.test.*"]
     }
   }
 }

@@ -13,7 +13,7 @@
   },
   "private": true,
   "devDependencies": {
-    "parcel": "latest"
+    "parcel": "^2.10.3"
   },
   "dependencies": {
     "@vomjs/tools": "workspace:*",

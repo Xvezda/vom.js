@@ -1,6 +1,9 @@
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default {
   entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -15,15 +18,18 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
-            options: {
-              rootMode: 'upward',
-            },
           },
         ],
       },
+    ],
+  },
+  resolve: {
+    modules: [
+      path.resolve(__dirname, 'node_modules'),
     ],
   },
 };

@@ -1,6 +1,5 @@
-import { Template } from './shared.js';
-
 import { deepEquals } from '@vomjs/tools';
+import { Template } from './shared.js';
 
 
 export function html(strings, ...args) {

@@ -1,44 +1,45 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment happy-dom
  */
+import { vi, test, expect } from 'vitest';
 import { debounce, throttle } from './optimize.js';
 
 
 const fps = 60;
 const interval = Math.floor(1000 / fps);
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
-jest
+vi
   .spyOn(window, 'requestAnimationFrame')
   .mockImplementation(callback => setTimeout(callback, interval));
 
 test('debounce', () => {
   const arr = [1, 2, 3];
-  const mock = jest.fn();
+  const mock = vi.fn();
   const debounced = debounce(200)(mock);
 
 
   arr.forEach(debounced);
   expect(mock).not.toBeCalled();
 
-  jest.runAllTimers();
+  vi.runAllTimers();
 
   expect(mock).toBeCalledTimes(1);
 });
 
 test('throttle', () => {
-  const mock = jest.fn();
+  const mock = vi.fn();
   const throttled = throttle(mock);
 
-  jest.advanceTimersByTime(8);
+  vi.advanceTimersByTime(8);
   expect(mock).not.toBeCalled();
 
   throttled();
   expect(mock).not.toBeCalled();
 
   throttled();
-  jest.advanceTimersByTime(16);
+  vi.advanceTimersByTime(16);
 
   expect(mock).toBeCalledTimes(1);
 });
