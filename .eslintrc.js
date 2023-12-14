@@ -5,7 +5,7 @@ module.exports = {
     'es2021': true,
     'jest': true
   },
-  'extends': ['eslint:recommended', 'plugin:compat/recommended'],
+  'extends': ['eslint:recommended'],
   'parserOptions': {
     'ecmaVersion': 13,
     'sourceType': 'module'
@@ -41,9 +41,6 @@ module.exports = {
   'overrides': [
     {
       'files': ['scripts/**/*.js', '*.spec.js'],
-      'rules': {
-        'compat/compat': 'off',
-      },
     },
   ]
 };
