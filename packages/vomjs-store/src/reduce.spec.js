@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { vi, test, expect } from 'vitest';
 import { createStore } from './reduce.js';
 
 test('카운터 예제 테스트', () => {
@@ -16,7 +16,7 @@ test('카운터 예제 테스트', () => {
   }
 
   const store = createStore(counterReducer);
-  const subscriberMock = jest.fn();
+  const subscriberMock = vi.fn();
   store.subscribe(() => subscriberMock(store.getState()));
 
   store.dispatch({type: 'counter/incremented'});

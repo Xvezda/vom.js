@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 import {
-  render,
+  render as _render,
   html,
   bind,
   forwardRef
-} from 'vomjs';
+} from '.';
 import {
   useState,
   useEffect,
@@ -28,18 +28,11 @@ jest
   .spyOn(window, 'requestAnimationFrame')
   .mockImplementation(callback => setTimeout(callback, interval));
 
-jest.mock('vomjs', () => {
-  const originalModule = jest.requireActual('vomjs');
-  return {
-    ...originalModule,
-    render: jest.fn((...args) => {
-      originalModule.render(...args);
-      jest.runAllTicks();
-      jest.runAllTimers();
-    }),
-  };
+const render = jest.fn((...args) => {
+  _render(...args);
+  jest.runAllTicks();
+  jest.runAllTimers();
 });
-
 
 describe('useState', () => {
   test('setter를 통해서 상태 변경', () => {

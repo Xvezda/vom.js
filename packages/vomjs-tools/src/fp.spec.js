@@ -1,12 +1,13 @@
-const {pipe} = require('./fp');
+import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest';
+import { pipe } from './fp.js';
 
 beforeEach(() => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
 });
 
 afterEach(() => {
-  jest.clearAllTimers();
-  jest.useRealTimers();
+  vi.clearAllTimers();
+  vi.useRealTimers();
 });
 
 async function runPendingPromise() {
@@ -16,7 +17,7 @@ async function runPendingPromise() {
 
 describe('pipe', () => {
   test('이전 함수의 반환값으로 호출', () => {
-    const mock = jest.fn(x => x);
+    const mock = vi.fn(x => x);
     const isEven = xs => xs.filter(x => x % 2 === 0);
     const biggerThan = n => xs => xs.filter(x => x > n);
 
@@ -34,7 +35,7 @@ describe('pipe', () => {
   });
 
   test('비동기 함수 처리', async () => {
-    const mock = jest.fn(x => x);
+    const mock = vi.fn(x => x);
     pipe(
       x => Promise.resolve(x),
       mock
@@ -47,7 +48,7 @@ describe('pipe', () => {
   });
 
   test('비동기 지연 처리', async () => {
-    const mock = jest.fn(x => x);
+    const mock = vi.fn(x => x);
     const delay = time => x =>
       new Promise(resolve => setTimeout(() => resolve(x), time));
 
@@ -61,13 +62,13 @@ describe('pipe', () => {
 
     expect(mock).not.toBeCalled();
 
-    jest.advanceTimersByTime(waitFor);
+    vi.advanceTimersByTime(waitFor);
     await runPendingPromise();
 
     expect(mock).toHaveBeenCalledTimes(1);
     expect(mock).toHaveBeenNthCalledWith(1, 42);
 
-    jest.advanceTimersByTime(waitFor);
+    vi.advanceTimersByTime(waitFor);
     await runPendingPromise();
     await p;
 
