@@ -17,18 +17,17 @@
     "readme": "pnpm run define 'docs: update README (%h)'"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-transform-runtime": "^7.16.5",
-    "@babel/preset-env": "^7.16.0",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "ejs": "^3.1.6",
     "eslint": "^8.4.1",
     "eslint-plugin-compat": "^4.0.0",
     "gh-pages": "^3.2.3",
-    "husky": "^7.0.4",
+    "husky": "^8.0.3",
     "lint-staged": ">=10",
-    "turbo": "^1.11.2"
+    "svgo": "^3.1.0",
+    "turbo": "^1.11.2",
+    "typescript": "^5.3.3"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
